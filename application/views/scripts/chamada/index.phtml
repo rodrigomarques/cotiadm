@@ -1,0 +1,136 @@
+<?php
+$util = new Util_Utilitarios();
+?>
+<script type="text/javascript">
+$(function(){
+   
+    var abas = $("#telacadastrar").tabs();
+});
+</script>
+<h3 class="header">
+    Chamada
+</h3>
+
+
+    <div id="telacadastrar" title="Turmas">
+        <div id="telacadastro">
+            <ul>
+                <li><a href="#telaturma">Buscar Turma</a></li>
+            </ul>
+          
+            <div id="telaturma">
+                <p>
+                    * AS CHAMADAS FICAM DISPONIVEIS PARA VISUALIZAÇÃO POR ATE 8 DIAS APÓS O SEU TÉRMINO.
+                </p>
+                <form method="post" id="form1" action="<?php echo $this->url(array('controller' => 'Chamada', 
+                    'action' => 'index'), NULL, true); ?>" >
+                Turma:
+                <?php if(count($this->listaTurma)): ?>
+                <select name="turma" id="turma">
+                    <?php foreach($this->listaTurma as $t): ?>
+                    <option <?php echo ($t["idturma"] == $this->id)?'selected="selected"': "";?> value="<?php echo $t["idturma"]; ?>"><?php echo $t["curso"] . " -- " 
+.$util->converterDataSaida($t["inicio"]) . " -- " . $t["horario"]; ?></option>
+                    <?php endforeach; ?>
+                </select>
+                <?php endif; ?>
+
+                <input type="submit" value="Buscar Turma" id="btncadastrar" />
+            </form>
+            </div>
+            
+        </div>
+
+    </div>
+         
+
+<p id="resposta">
+    <?php echo $this->resp; ?>
+</p>
+<?php $this->setEscape('htmlentities');
+$util = new Util_Utilitarios();?>
+<form method="post" action="<?php echo $this->url(array('controller' => 'Chamada', 
+        'action' => 'gerarchamada')); ?>" id="form1" >
+<?php 
+if(count($this->turmas) > 0): 
+echo "<p>";
+    echo "Turma: " . $this->turma["frequencia"];
+    echo " " . $this->turma["horario"];
+    echo "<br />Inicio: " . $util->converterDataSaida($this->turma["inicio"]);
+    echo ($this->turma["fim"] != "")?" Término: " . $util->converterDataSaida($this->turma["fim"]): "";
+    echo " Vagas: " . $this->turma["vagas"];
+echo "</p>";
+    ?>
+<table class="dtgrid">
+    <tr>
+        <th>Nome Aluno</th>
+        <th>E-mail</th>
+        <th>Telefone</th>
+        <th>Celular</th>
+        <th>Refazendo</th>
+        <th>Dar Presença</th>
+    </tr>
+    <?php 
+    foreach($this->turmas as $al): ?>
+        <tr>
+            <td><?php echo $al["nomealuno"]; ?></td>
+            <td><?php echo $al["emailaluno"]; ?></td>
+            <td><?php echo $al["telefone"]; ?></td>
+            <td><?php echo $al["celular"]; ?></td>
+            <td><?php echo ($al["refazendo"] == 1)?"Refazendo":"Novo"; ?></td>
+            <td>
+                <input type="checkbox" value="<?php echo $al["aluno_idaluno"]; ?>" name="presentes[]" /> 
+            </td>
+        </tr>
+    <?php endforeach; ?>
+        <input type="hidden" name="turma" value="<?php echo $this->id; ?>" />
+</table>
+    <input type="submit" value="Gerar Chamada" id="btn" />
+<?php endif; ?>
+</form>
+<div style="width: 980px; overflow-x: auto">
+<?php 
+if(count($this->listaPresenca) > 0): 
+    ?>
+    <table class="dtgrid" style="width: 100%" >
+    <tr>
+        <th style="width: 200px;">Alunos</th>
+        <?php foreach($this->listaDatas as $d): ?>
+        <th><?php echo substr($util->converterDataSaida($d["data"]), 0,5) ?></th>
+        <?php endforeach; ?>
+    </tr>
+    <?php 
+    $chaves = array();
+    $opc = false;
+    foreach($this->turmas as $al): 
+        ?>
+        <tr>
+            <td><?php echo $al["nomealuno"]; ?></td>
+            <?php foreach($this->listaPresenca as $p): 
+                    if($al["idaluno"] != $p["alunoturma_aluno_idaluno"]):
+                        continue;
+                    endif;
+                    if($opc == false):
+                        $chaves[] = array('turma' => $p["alunoturma_turma_idturma"], 
+                            'data' => $p["data"]);
+                    endif;
+                    echo "<td>".(($p["status"] == 1)?"P":"F")."</td>";
+                ?>
+                
+            <?php endforeach;
+            $opc = true;?>
+        </tr>
+    <?php endforeach;?>
+        <tr>
+            <td></td>
+            <?php 
+            $chaves = array_reverse($chaves);
+            foreach($chaves as $chave): ?>
+            <td> <a href="<?php echo $this->url(array('data' => $chave["data"], 'turma' => $chave["turma"]), null, true); ?>">X</a> </td>
+            <?php endforeach; ?>
+        </tr>
+</table>
+<?php endif; ?>
+</div>
+</form>
+<br><br>
+

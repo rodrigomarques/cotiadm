@@ -1,0 +1,61 @@
+<script type="text/javascript">
+$(function(){
+    
+});
+</script>
+﻿<?php $this->setEscape('htmlentities');
+$util = new Util_Utilitarios();?>
+<h3 class="header">
+    Reserva de Alunos do Site 
+  
+</h3>
+
+<form method="get" action="<?php echo $this->url(array('controller' => 'Reserva', 'action' => 'index')); ?>">
+    Nome do Aluno: <input type="text" name="nome" id="nome" value="<?php echo $this->nome; ?>" />
+    Email: <input type="text" name="email" id="email" value="<?php echo $this->email; ?>" />
+    Cpf: <input type="text" name="cpf" id="cpf" value="<?php echo $this->cpf; ?>" />
+    <input type="submit" value="Buscar Alunos" class="btn" />
+</form>
+<p id="resposta">
+<?php echo $this->resp; ?>
+</p>
+<?php if(count($this->dados) > 0): ?>
+<table class="dtgrid">
+    <tr>
+        <th><a href="<?php echo $this->url(array('controller' => 'Aluno', 'action' => 'index', 'order' => 'idaluno'), NULL, true); ?>">
+    Matrícula</a></th>
+        <th><a href="<?php echo $this->url(array('controller' => 'Aluno', 'action' => 'index', 'order' => 'nome'), NULL, true); ?>">
+    Nome</a></th>
+        <th>E-mail</th>
+        <th>Sexo</th>
+        <th>Nascimento</th>
+        <th>Cpf</th>
+        <th>Telefone</th>
+        <th>Celular</th>
+        <th>AÇÃO</th>
+    </tr>
+    <?php foreach($this->dados as $al): ?>
+        <tr>
+            <td><?php echo $al["idaluno"]; ?></td>
+            <td><?php echo $al["nome"]; ?></td>
+            <td><?php echo $al["email"]; ?></td>
+            <td><?php echo $al["sexo"]; ?></td>
+            <td><?php echo $util->converterDataSaida($al["nascimento"]); ?></td>
+            <td><?php echo $al["cpf"]; ?></td>
+            <td><?php echo $al["telefone"]; ?></td>
+            <td><?php echo $al["celular"]; ?></td>
+            <td width="110px"> 
+                <a href="<?php echo $this->url(array('controller' => 'Aluno', 'action' => 'edit', 
+                    'params' => $al["idaluno"]), NULL, true); ?>"><img src="<?php echo $this->baseUrl("img/ico_edit.png");?>" title="Editar Aluno"/></a> 
+		<a href="<?php echo $this->url(array('controller' => 'Aluno', 'action' => 'excluir', 
+                    'params' => $al["idaluno"]), NULL, true); ?>" class="excluirAluno"><img src="<?php echo $this->baseUrl("img/ico_delete.png");?>" title="Excluir Aluno"/></a>
+                <a href="<?php echo $this->url(array('controller' => 'Aluno', 'action' => 'turmas', 
+                    'params' => $al["idaluno"]), NULL, true); ?>"><img src="<?php echo $this->baseUrl("img/ico_turmas.png");?>" title="Alocar em turma"/></a>
+                <a href="<?php echo $this->url(array('controller' => 'Aluno', 'action' => 'pagamentoaluno', 
+                    'params' => $al["idaluno"]), NULL, true); ?>"><img src="<?php echo $this->baseUrl("img/ico_money.png");?>" title="Pagamento"/></a>
+                <a href="<?php echo $this->url(array('controller' => 'Aluno', 'action' => 'index','idaluno' => $al["idaluno"]), null, true);?>" class="detalhes" rel="<?php echo $al["idaluno"]; ?>"><img src="<?php echo $this->baseUrl("img/ico_details.png");?>" title="Detalhes Aluno"/></a>
+            </td>
+        </tr>
+    <?php endforeach; ?>
+</table>
+<?php endif; ?>

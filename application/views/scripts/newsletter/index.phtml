@@ -1,0 +1,57 @@
+<?php $this->setEscape('htmlentities');?>
+<script type="text/javascript">
+    $(function(){
+        $("#envio").hide();
+        
+        $("#mostraremail").live('click', function(){
+            
+            $("#envio").toggle();
+            
+            return false;
+        });
+    });
+</script>
+<h3 class="header">
+    Newsletter
+</h3>
+<div id="listaporemail">
+    <?php echo $this->lista2; ?>
+</div>
+<form method="post" action="<?php echo $this->url(array('controller' => 'Newsletter', 'action' => 'Index'),
+        NULL, true); ?>">
+    Nome: <input type="text" name="nome" id="nome" value="<?php echo $this->nome; ?>" />
+    E-mail: <input type="text" name="email" id="email" value="<?php echo $this->email; ?>" />
+    <input type="submit" value="Buscar Newsletter" class="btn" />
+</form>
+<p id="resposta">
+<?php echo $this->resp; ?>
+</p>
+<input type="submit" value="Mostrar / Ocultar Formato Envio" class="btn" id="mostraremail" />
+<div id="envio">
+    <?php if(count($this->lista) > 0): ?>
+    <?php foreach($this->lista as $news): ?>
+        <?php //echo $news["nome"] . "&lt;".$news["email"]."&gt;,";
+        echo $news["email"].",";?>
+    <?php endforeach; ?>
+<?php endif; ?>
+</div>
+<?php if(count($this->lista) > 0): ?>
+<table class="dtgrid">
+    <tr>
+        <th>Nome</th>
+        <th>E-mail</th>
+        <th>AÇÃO</th>
+    </tr>
+    <?php foreach($this->lista as $news): ?>
+        <tr>
+            <td><?php echo $news["nome"]; ?></td>
+            <td><?php echo $news["email"]; ?></td>
+            <td>
+                <a href="<?php echo $this->url(array('controller' => 'Newsletter', 'action' => 'excluir', 
+                    'params' => $news["idnewsletter"]), NULL, true); ?>"><img src="<?php echo $this->baseUrl("img/ico_delete.png");?>" title="Excluir Aluno"/></a>
+            </td>
+        </tr>
+    <?php endforeach; ?>
+</table>
+<?php endif; ?>
+

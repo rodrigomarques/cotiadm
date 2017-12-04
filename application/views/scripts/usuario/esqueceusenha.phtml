@@ -1,0 +1,123 @@
+﻿
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title></title>
+        <script type="text/javascript" src="<?php echo $this->baseUrl("js/jquery-1.8.0.min.js"); ?>"></script>
+        <script type="text/javascript" src="<?php echo $this->baseUrl("js/jquery-ui-1.8.min.js"); ?>"></script>
+        <link rel="stylesheet" type="text/css" href="<?php echo $this->baseUrl("estilo/redmond/jquery-ui.css"); ?>" />
+        <link rel="stylesheet" href="<?php echo $this->baseUrl('estilo/estiloadm.css'); ?>" />
+        <script type="text/javascript">
+            $(function(){
+                if($("#resposta").html().trim() != ""){
+                    $("#resposta").hide().attr("title", "Tela de Mensagens");
+                    $("#resposta").dialog({
+                        modal : true
+                    });
+                }
+            })
+        </script>
+        <style>
+            
+            #fundologin{
+                background: url('<?php echo $this->baseUrl('img/fundo_login.jpg'); ?>');
+                margin: 0;
+                font-family: verdana;
+                
+            }
+            
+            #login{
+                width: 520px;
+                height: 250px;
+                background: #264e8b;
+                border: solid 10px #00122d;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                margin-left: -270px;
+                margin-top: -130px;
+                box-shadow: 5px 5px 10px #000;
+            }
+            
+            #login h3{
+                color: #FFF;
+                margin: 15px 0 0 0;
+                text-align: center;
+            }
+            
+            #login form{
+                margin-top: 30px;
+                color: #FFF;
+                font-size: 14px;
+                
+            }
+            
+            #login input[type=text], #login input[type=password]{
+                width: 315px;
+                margin-bottom: 5px;
+                border-radius: 5px;
+                border: none;
+                padding: 3px;
+                box-shadow: 1px 1px 10px #000;
+            }
+            
+            .logo_login{
+                float: left;
+                border: solid 5px #001c44;
+                margin: 30px 20px 0 25px;
+                box-shadow: 2px 2px 10px #000;
+            }
+            
+            .entrar{
+                float: right;
+                margin-right: 25px;
+                margin-top: 10px;
+                box-shadow: 2px 2px 10px #000;
+            }
+            p{
+                color:#DDD;
+		font-size:12px;
+                font-weight: bold;
+                padding: 5px;
+            }
+	    .esqueceu{
+		color:#DDD;
+		font-size:10px;
+            }
+            
+        </style>
+        
+    </head>
+    <body id="fundologin">
+
+        
+        <div id="login">
+            
+            <h3>Esqueceu a Senha - identificação do usuário</h3>
+            
+            <img src="<?php echo $this->baseUrl('img/logo_login.jpg'); ?>" class="logo_login" width="120" />
+            
+            <form method="post">
+                Login:<br/>
+                <input type="text" name="login" />
+                <br/>
+                E-mail:<br/>
+                <input type="text" name="email" />
+                <br/>
+                <a href="<?php echo $this->url(array('controller' => 'Usuario', 'action' => 'logar'), NULL, true); ?>" class="esqueceu">Voltar</a>
+		<input type="image" src="<?php echo $this->baseUrl('img/entrar_login.jpg'); ?>" class="entrar" />
+                <br />
+                
+            </form>
+            <p>
+                <br />
+                Informe o seu login que em instantes receberá em seu e-mail uma nova senha para acessar os sistema.
+            </p>
+        </div>
+        <div id="resposta">
+            <?php echo $this->resp; ?>
+        </div>
+        
+    </body>
+</html>

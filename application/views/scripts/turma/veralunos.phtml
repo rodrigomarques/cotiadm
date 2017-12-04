@@ -1,0 +1,88 @@
+<script type="text/javascript">
+    $(function(){
+        $("#inicio").datepicker({
+            changeMonth : true,
+            changeYear : true
+        });
+    
+        
+    });
+</script>
+<?php
+$this->setEscape('htmlentities');
+$util = new Util_Utilitarios();
+?>
+<h3 class="header">
+    Alunos da Turma: <?php echo $this->turma["curso"] . " / " . $this->turma["frequencia"] . " / " . $this->turma["horario"]; ?>
+</h3>
+
+<a href="<?php echo $this->url(array('controller' => 'Turma', 'action' => 'index'), NULL, true); ?>" class="btn">
+    Voltar</a>
+
+<a href="<?php echo $this->url(array('controller' => 'Turma', 'action' => 'gerarpdf')); ?>" class="btn">
+    Lista Chamada</a>
+
+<p><?php echo $this->resp; ?></p>
+<?php if (count($this->alunos) > 0): ?>
+    <table class="dtgrid">
+        <tr>
+            <th>Nome Aluno</th>
+            <th>E-mail</th>
+            <th>Tel</th>
+            <th>Cel</th>
+            <th>Pagamento</th>
+            <th>Situação</th>
+            <th></th>
+            <th></th>
+        </tr>
+    <?php foreach ($this->alunos as $aluno): 
+        $style = "";
+            if($aluno["reserva"] == 1)
+                $style = "background:#EE0000;"
+        ?>
+        <tr style="<?php echo $style; ?>" title="<?php echo $aluno["obs"]; ?>">
+                <td>
+                    <a href="<?php echo $this->url(array('controller' => 'Aluno', 'action' => 'turmas', 
+                        'params' => $aluno["idaluno"])); ?>" style="text-decoration: none">
+                    <?php echo $aluno["nomealuno"]; ?>
+                    </a>
+                </td>
+                <td>
+                    <?php echo $aluno["emailaluno"]; ?>
+                </td>
+                <td>
+                    <?php echo $aluno["telefone"]; ?>
+                </td>
+                <td>
+                    <?php echo $aluno["celular"]; ?>
+                </td>
+                <td>
+                    <?php echo $aluno["formapagamento"]; ?>
+                </td>
+                <td>
+                    <?php echo ($aluno["refazendo"] == 0)?(($aluno["reserva"] == 1)?"Reserva":"Aluno Novo"):"Refazendo"; ?>
+                </td>
+                <td>
+                    <?php echo $aluno["statusturma"]; ?>
+                </td>
+                <td>
+                    <a href="<?php echo $this->url(array('controller' => 'Turma', 'action' => 'excluiraluno', 
+                        'param1' => $aluno['idaluno'], 'param2' => $this->turma['idturma'])); ?>">
+                    Excluir da Turma</a>
+                <?php if($aluno["reserva"] == 1): ?>
+                    <a href="<?php echo $this->url(array('controller' => 'Aluno', 'action' => 'detalhesturma', 
+                        'params' => $aluno['idaluno'], 'paramsturma' => $this->turma['idturma'])); ?>">
+                        Confirmar Presença
+                    </a>
+                    <?php endif; ?>
+                </td>
+            </tr>
+    <?php endforeach; ?>
+    </table>
+<?php endif; ?>
+<p>
+    * Ao excluir um aluno da turma, estará (caso ja exista) excluindo as presenças do mesmo na chamada!
+</p>
+<script type="text/javascript">
+    
+</script>

@@ -1,0 +1,132 @@
+﻿<script type="text/javascript">
+$(function(){
+    var abas = $("#telacadastrar").tabs();
+    
+     var validator = $('#form1').validate({
+          rules:{
+                nome:{
+                    required: true,
+                    minlength: 3
+                },
+                login : {
+                    required: true,
+                    minlength: 3
+                },
+                email: {
+                    required: true,
+                    email: true
+                }
+          },
+          messages:{
+                nome:{
+                    required: "Preencha o campo nome<br />",
+                    minlength: "Informe mínimo de 3 caracteres para o nome<br />"
+                },
+                login : {
+                    required: "Preencha o campo login<br />",
+                    minlength: "Informe mínimo de 3 caracteres para o login<br />"
+                },
+                email: {
+                    required: "Preencha o campo e-mail<br />",
+                    email: "O campo e-mail deve ser válido<br />"
+                }
+          },
+          errorLabelContainer : "#validate"
+     });
+});
+</script>
+<h3 class="header">
+   Usuários
+</h3>
+<div id="validate"></div>
+<div id="telacadastrar" title="Cadastrar Usuário">
+    <div id="telacadastro">
+        <ul>
+            <li><a href="#telausuario">Inserir Usuário</a></li>
+        </ul>
+
+        <div id="telaarea">
+
+            <form method="post" action="<?php echo $this->url(
+                    array('controller' => 'Usuario', 'action' => 'Index'), NULL, true); ?>" id="form1">
+                <table width="100%">
+                    <tr>
+                        <td>Nome:</td> 
+                        <td><input type="text" name="nome" id="nome" value="<?php echo $this->nome; ?>" /></td>
+                    </tr>
+                    <tr>
+                        <td>Login:</td> 
+                        <td><input type="text" name="login" id="login" value="<?php echo $this->login; ?>" /></td>
+                    </tr>
+                    <tr>
+                        <td>Senha:</td> 
+                        <td><input type="password" name="senha" id="senha" /></td>
+                    </tr>
+                    <tr>
+                        <td>E-mail:</td> 
+                        <td><input type="text" name="email" id="email" value="<?php echo $this->email; ?>" /></td>
+                    </tr>
+                    <tr>
+                        <td>Perfil:</td> 
+                        <td>
+                            <?php if(count($this->listaPerfil) > 0): ?>
+                            <select name="perfil" id="perfil">
+                                <?php foreach($this->listaPerfil as $perfil): ?>
+                                <option value="<?php echo $perfil["idperfil"]; ?>" <?php echo ($this->idperfil == $perfil["idperfil"])?"selected='selected'":""; ?>>
+                                    <?php echo $this->escape(($perfil["perfil"])); ?>
+                                </option>
+                                <?php endforeach; ?>
+                            </select>
+                            <?php endif; ?>
+                        </td>
+                    </tr>
+                </table>
+                <?php if(!isset($this->idusuario)): ?>
+                    <input type="submit" value="Cadastrar" id="btncadastrar" />
+                <?php else: ?>
+                    <input type="hidden" name="id" value="<?php echo $this->idusuario; ?>" />
+                    <input type="submit" value="Editar Dados" id="btncadastrar" />
+                <?php endif; ?>
+            </form>
+        </div>
+    </div>
+</div>
+ 
+<p id="resposta">
+<?php echo $this->resp; ?>
+</p>
+<?php if(count($this->listaUsuario) > 0): ?>
+<table class="dtgrid">
+    <tr>
+        <th>Login</th>
+        <th>Perfil</th>
+        <th>E-mail</th>
+        <th>Nome</th>
+        <th>Status</th>
+        <th>AÇÃO</th>
+    </tr>
+    <?php foreach($this->listaUsuario as $u): ?>
+    <tr>
+        <td><?php echo $u["usuario"]; ?></td>
+        <td><?php echo $u["perfil"]; ?></td>
+        <td><?php echo $u["email"]; ?></td>
+        <td><?php echo $u["nome"]; ?></td>
+        <td><?php echo ($u["ativo"] == 1)?'Ativo':'Não Ativo'; ?></td>
+        <td width="45px">
+            <a href="<?php echo $this->url(array('controller' => 'Usuario', 'action' => 'Editar', 'params' => $u["idusuario"])
+                    , NULL, TRUE) ;?>">
+            <img src="<?php echo $this->baseUrl("img/ico_edit.png");?>" title="Editar Usuario"/></a>
+            <?php if($u["ativo"] == 1): ?>
+            <a href="<?php echo $this->url(array('controller' => 'Usuario', 'action' => 'Modificar', 'params' => $u["idusuario"])
+                    , NULL, TRUE) ;?>">
+                <img src="<?php echo $this->baseUrl("img/ico_disable.png");?>" title="Desativar"/></a>
+            <?php else: ?>
+            <a href="<?php echo $this->url(array('controller' => 'Usuario', 'action' => 'Modificar', 'params' => $u["idusuario"])
+                    , NULL, TRUE) ;?>">
+               <img src="<?php echo $this->baseUrl("img/ico_ok.png");?>" title="Ativar"/></a>
+            <?php endif; ?>
+        </td>
+    </tr>
+    <?php endforeach; ?>
+</table>
+<?php endif; ?>

@@ -1,0 +1,139 @@
+<?php
+$util = new Util_Utilitarios();
+?>
+<script type="text/javascript">
+$(function(){
+   
+   $("#cep").on('blur', function(){
+        var cep = $(this).val();
+        $.getJSON("http://api.postmon.com.br/v1/cep/" + cep, 
+            function(data){ 
+                if(data != null){
+                    $("#logradouro").val(data.logradouro);
+                    $("#bairro").val(data.bairro);
+                    $("#cidade").val(data.cidade);
+                    $('#estado').find('option[value="' + data.estado + '"]').attr("selected",true);
+                    
+                }
+            });
+
+        return false;
+
+    });
+    
+    var abas = $("#telacadastrar").tabs();
+    $("#celular").mask("(99) 9999-9999?9");
+    $("#telefone").mask("(99) 9999-9999");
+});
+</script>
+<h3 class="header">
+    Editar Aluno
+</h3>
+
+
+<p id="resposta">
+    <?php echo $this->resp; ?>
+</p>
+<div id="validate"></div>
+    <div id="telacadastrar" title="Editar Aluno">
+        <div id="telacadastro">
+            <ul>
+                <li><a href="#telaaluno">Aluno</a></li>
+            </ul>
+          
+            <div id="telaaluno">
+                <form method="post" id="form1" action="<?php echo $this->url(array('controller' => 'Aluno', 
+                    'action' => 'edit')); ?>">
+                    <input type="hidden" name="idaluno" id="idaluno" value="<?php echo $this->aluno["idaluno"]; ?>" />
+                <table width="100%">
+                    <tr>
+                        <td>Nome do Aluno:</td> 
+                        <td colspan="5"><input style="width: 500px;" type="text" name="nome" id="nome" value="<?php echo $this->aluno['nome']; ?>" /></td>
+                    </tr>
+                    <tr>
+                        <td>Email:</td> 
+                        <td><input type="text" name="email" id="email" value="<?php echo $this->aluno["email"]; ?>" /></td>
+                        <td>Sexo:</td> 
+                        <td>
+                            <input type="radio" name="sexo" value="M" <?php echo ("M" == $this->aluno["sexo"])?"checked='checked'":""; ?> />M 
+                            <input type="radio" name="sexo" value="F" <?php echo ("F" == $this->aluno["sexo"])?"checked='checked'":""; ?> />F
+                        </td>
+                        <td valign="top">Responsavel Aluno: </td>
+                        <td><input type="text" name="respaluno" id="respaluno" value="<?php echo $this->aluno["responsavelaluno"]; ?>" /></td>
+                    </tr>
+                    <tr>
+                        <td>Nasicmento: </td>
+                        <td>
+                            <input type="text" name="dtnascimento" id="dtnascimento" 
+                                   value="<?php echo $util->converterDataSaida($this->aluno["nascimento"]); ?>" />
+                        </td>
+                        <td valign="top">Cpf: </td>
+                        <td><input type="text" name="cpf" id="cpf" value="<?php echo $this->aluno["cpf"]; ?>" /></td>
+                   
+                        <td valign="top">Rg: </td>
+                        <td><input type="text" name="rg" id="rg" value="<?php echo $this->aluno["rg"]; ?>" /></td>
+                        
+                    </tr>
+                    <tr>
+                        <td valign="top">Telefone: </td>
+                        <td><input type="text" name="telefone" id="telefone" value="<?php echo $this->aluno["telefone"]; ?>" /></td>
+                        <td valign="top">Celular: </td>
+                        <td><input type="text" name="celular" id="celular" value="<?php echo $this->aluno["celular"]; ?>" /></td>
+                    </tr>
+                    <tr>
+                        <td valign="top">Observação Aluno: </td>
+                        <td colspan="5">
+                            <textarea name="obsaluno" id="obsaluno" style="width:400px;height: 100px; "><?php echo $this->aluno["observacaoaluno"]; ?></textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="6">
+                            <h3>Endereço</h3>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Logradouro: </td>
+                        <td>
+                            <input type="text" name="logradouro" id="logradouro" 
+                                   value="<?php echo $this->aluno["logradouro"]; ?>" />
+                        </td>
+                        <td valign="top">Número: </td>
+                        <td><input type="text" name="numero" id="numero" value="<?php echo $this->aluno["numero"]; ?>" /></td>
+                        <td>Complemento: </td>
+                        <td>
+                            <input type="text" name="complemento" id="complemento" 
+                                   value="<?php echo $this->aluno["complemento"]; ?>" />
+                        </td>
+                    </tr>
+                   <tr>
+                        <td valign="top">Cep: </td>
+                        <td><input type="text" name="cep" id="cep" value="<?php echo $this->aluno["cep"]; ?>" /></td>
+                        <td>Bairro: </td>
+                        <td>
+                            <input type="text" name="bairro" id="bairro" 
+                                   value="<?php echo $this->aluno["bairro"]; ?>" />
+                        </td>
+                        <td valign="top">Cidade: </td>
+                        <td><input type="text" name="cidade" id="cidade" value="<?php echo $this->aluno["cidade"]; ?>" /></td>
+                    </tr>
+                    <tr>
+                        <td>Estado: </td>
+                        <td>
+                            <select name="estado" id="estado">
+                                <?php foreach($this->estados as $est): ?>
+                                <option <?php echo ($est == $this->aluno["estado"])?"selected='selected'":""; ?> value="<?php echo $est; ?>"><?php echo $est; ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </td>
+                    </tr>
+                </table>
+                    
+                    
+          <input type="submit" value="Editar" id="btncadastrar" />
+    </form>
+            </div>
+            
+        </div>
+
+    </div>
+         

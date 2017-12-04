@@ -1,0 +1,26 @@
+<?php $this->setEscape('htmlentities');?>
+<script type="text/javascript">
+    $(function(){
+        $("#data").datepicker();
+    });
+</script>
+<h3 class="header">
+    RELATORIOS >> Professor por Turma
+</h3>
+<form action="<?php echo $this->url(array('controller' => 'Relatorio', 'action' => 'turmaprofessor'),
+        NULL, true); ?>" method="post">
+Professor: <select name="professor" id="professor">
+                <option value="">Nao Definido</option>
+                <?php if(count($this->listaProfessor) > 0): ?>
+                    <?php foreach($this->listaProfessor as $p): ?>
+                <option value="<?php echo $p["idusuario"]; ?>">
+                    <?php echo $p["usuario"]; ?>
+                </option>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </select>
+
+Data Inicio: <input type="text" name="data" id="data" />
+<input type="submit" value="Buscar" class="btn" />
+</form>
+

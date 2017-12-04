@@ -1,0 +1,36 @@
+<?php if($this->first == $this->pag): ?>
+<a href="<?php echo $this->url(array(
+    'pag' => $this->first
+        )); ?>">Primeira</a>
+<?php endif; ?>
+<?php if(isset($this->previous)): ?>
+<a href="<?php echo $this->url(array(
+    'pag' => $this->previous
+        )); ?>"> < </a>
+<?php endif; ?>
+<?php 
+if(count($this->pagesInRange) > 1):
+    foreach($this->pagesInRange as $page): 
+        if($this->pag == $page):
+            echo $page;
+            continue;
+        endif;
+        ?>
+    <a href="<?php echo $this->url(array(
+        'pag' => $page
+            )); ?>"> <?php echo $page; ?> </a>
+    <?php endforeach; 
+endif; ?>
+
+<?php if(isset($this->next)): ?>
+<a href="<?php echo $this->url(array(
+    'pag' => $this->next
+        )); ?>"> > </a>
+<?php endif; ?>
+
+<?php if($this->last == $this->pag): ?>
+<a href="<?php echo $this->url(array(
+    'pag' => $this->last
+        )); ?>">Última</a>
+<?php endif; ?>
+<br /><br />

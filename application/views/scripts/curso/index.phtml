@@ -1,0 +1,65 @@
+﻿<?php $this->setEscape('htmlentities');?>
+<h3 class="header">
+    Cursos
+</h3>
+
+<a href="<?php echo $this->url(array('controller' => 'Curso', 'action' => 'cadastrar'), NULL, true); ?>" class="btn">
+    Cadastrar Cursos</a>
+
+<form method="post">
+    Nome do Curso: <input type="text" name="curso" id="curso" value="<?php echo $this->curso; ?>" />
+    Status: <select name="status" id="status">
+        <option value="1" <?php echo ($this->status == 1)?"selected='selected'":""; ?>>ATIVO</option>
+        <option value="0" <?php echo (isset($this->status) && $this->status == 0)?"selected='selected'":""; ?>>NÃO ATIVO</option>
+    </select>
+    Area:
+    <?php if(count($this->listaAreas) > 0): ?>
+    <select name="area" id="area">
+        <option value=""></option>
+        <?php foreach($this->listaAreas as $area): ?>
+        <option value="<?php echo $area["idarea"]; ?>" <?php echo ($this->area == $area["idarea"])?"selected='selected'":""; ?>>
+            <?php echo $area["area"]; ?>
+        </option>
+        <?php endforeach; ?>
+    </select>
+    <?php endif; ?>
+    <input type="submit" value="Buscar Cursos" class="btn" />
+</form>
+<p id="resposta">
+    <?php echo $this->resp; ?>
+</p>
+
+<?php if(count($this->listaCursos) > 0): ?>
+<table class="dtgrid">
+    <tr>
+        <th>Nome do Curso</th>
+        <th>Carga Horária</th>
+        <th>Posição</th>
+        <th>Area</th>
+        <th>Incompany</th>
+        <th>Status</th>
+        <th>TAG</th>
+        <th>AÇÃO</th>
+    </tr>
+    <?php foreach($this->listaCursos as $curso): ?>
+        <tr>
+            <td><?php echo $curso["curso"]; ?></td>
+            <td><?php echo $curso["cargahoraria"]; ?></td>
+            <td><?php echo $curso["posicao"]; ?></td>
+            <td><?php echo $curso["area"]; ?></td>
+            <td><?php echo ($curso["incompany"] == 1)?"Incompany":""; ?></td>
+            <td><?php echo ($curso["status"] == 1)?"Ativo":"Desativado"; ?></td>
+            <td><?php echo ($curso["tag"]); ?></td>
+            <td>
+                <a href="<?php echo $this->url(array('controller' => 'Curso', 'action' => 'editar', 
+                    'params' => $curso["idcurso"]), NULL, true); ?>">
+                <img src="<?php echo $this->baseUrl("img/ico_edit.png");?>" title="Editar Curso"/></a> 
+                | 
+                <a href="<?php echo $this->url(array('controller' => 'Curso', 'action' => 'excluir', 
+                    'params' => $curso["idcurso"]), NULL, true); ?>">
+                    <img src="<?php echo $this->baseUrl(($curso["status"] == 1)?"img/ico_disable.png":"img/ico_ok.png"); ?>" title="Ativar / Desativar"/>
+                </a></td>
+        </tr> 
+    <?php endforeach; ?>
+</table>
+<?php endif; ?>

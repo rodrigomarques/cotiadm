@@ -1,0 +1,216 @@
+<?php
+$util = new Util_Utilitarios();
+?>
+<script type="text/javascript">
+$(function(){
+    var abas = $("#telacadastrar").tabs();
+    
+    $("#inicio").datepicker({
+        changeMonth : true,
+        changeYear : true,
+        onSelect : function(dataSelecionada){
+            $("#fim").datepicker("option", "minDate", dataSelecionada);
+        }
+    });
+    $("#fim").datepicker({
+        changeMonth : true,
+        changeYear : true
+    });
+    
+    var validator = $('#form1').validate({
+          rules:{
+                horario:{
+                    required: true
+                },
+                inicio:{
+                    required : true
+                },
+                vagas : {
+                    required : true,
+                    disgits : true
+                },
+                valor : {
+                    required : true
+                },
+                curso : {
+                    required : true
+                }
+          },
+          messages:{
+                horario:{
+                    required: "O campo horário é obrigatorio.<br />"
+                },
+                inicio:{
+                    required : "O campo início é obrigatorio.<br />"
+                },
+                vagas : {
+                    required : "O campo vagas é obrigatorio.<br />",
+                    disgits : "Informe apenas números nas vagas<br />"
+                },
+                valor : {
+                    required : "O campo valor é obrigatorio.<br />"
+                },
+                curso : {
+                    required : "O campo curso é obrigatorio.<br />"
+                }
+                
+          },
+          errorLabelContainer : "#validate"
+     });
+     
+     $("#turmas").live('change', function(){
+        
+        var valor = $(this).val();
+        if(valor != "" && valor != 0){
+            $.post('<?php echo $this->url(array('controller' => 'Aluno', 'action' => 'conferir')); ?>',
+                    { 
+                        id : valor
+                    },
+                    function(result){
+                        if(result != "")
+                            {
+                                alert(result);
+                            }
+                    });
+           }
+    });
+     
+     $("#sala").live('change', function(){
+        
+        var valor = $(this).val();
+        if(valor != "" && valor != 0){
+                $("#vagas").attr('readonly', true);
+                $.post('<?php echo $this->url(array('controller' => 'Turma', 'action' => 'atualizarvagas')); ?>',
+                {
+                    idsala : valor
+                },
+                function(data){
+                    $("#vagas").attr('readonly', false);
+                    $("#vagas").val(data);
+                }
+                );
+           }
+    });
+});
+</script>
+<h3 class="header">
+    Editar Turma
+</h3>
+<p id="resposta">
+<?php echo $this->resp; ?>
+</p>
+<div id="validate"></div>
+    <div id="telacadastrar" title="Editar Turma">
+        <div id="telacadastro">
+            <ul>
+                <li><a href="#telaturma">Turma</a></li>
+            </ul>
+          
+            <div id="telaaluno">
+                <form method="post" id="form1" action="<?php echo $this->url(array('controller' => 'Turma', 
+                    'action' => 'editar')); ?>">
+                <table width="100%">
+                    <tr>
+                        <td>Frequencia:</td> 
+                        <td>
+                            <input type="checkbox" name="dias[]" id="dias" <?php echo (isset($this->dias) && 
+                                    is_array($this->dias) && in_array('seg', $this->dias))?'checked="checked"':""; ?> value="seg" />Segunda-feira
+                            <input type="checkbox" name="dias[]" id="dias" value="ter" <?php echo (isset($this->dias) && 
+                                    is_array($this->dias) && in_array('ter', $this->dias))?'checked="checked"':""; ?> />Terça-feira
+                            <input type="checkbox" name="dias[]" id="dias" value="qua" <?php echo (isset($this->dias) && 
+                                    is_array($this->dias) && in_array('qua', $this->dias))?'checked="checked"':""; ?> />Quarta-feira
+                            <br />
+                            <input type="checkbox" name="dias[]" id="dias" value="qui" <?php echo (isset($this->dias) && 
+                                    is_array($this->dias) && in_array('qui', $this->dias))?'checked="checked"':""; ?> />Quinta-feira
+                            <input type="checkbox" name="dias[]" id="dias" value="sex" <?php echo (isset($this->dias) && 
+                                    is_array($this->dias) && in_array('sex', $this->dias))?'checked="checked"':""; ?> />Sexta-feira
+                            <input type="checkbox" name="dias[]" id="dias" value="sab" <?php echo (isset($this->dias) && 
+                                    is_array($this->dias) && in_array('sab', $this->dias))?'checked="checked"':""; ?> />Sabado
+                            <input type="checkbox" name="dias[]" id="dias" value="dom" <?php echo (isset($this->dias) && 
+                                    is_array($this->dias) && in_array('dom', $this->dias))?'checked="checked"':""; ?> />Domingo
+                        </td>
+                        <td>Horário:</td> 
+                        <td><input type="text" name="horario" id="horario" value="<?php echo $this->turma["horario"]; ?>" /></td>
+                    </tr>
+                    <tr>
+                        <td>Inicio: </td>
+                        <td>
+                            <input type="text" name="inicio" id="inicio" 
+                                   value="<?php echo $util->converterDataSaida($this->turma["inicio"]); ?>" />
+                        </td>
+                        <td>Término: </td>
+                        <td>
+                            <input type="text" name="fim" id="fim" 
+                                   value="<?php echo ($this->turma["fim"] != "")?$util->converterDataSaida($this->turma["fim"]):""; ?>" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Valor: </td>
+                        <td>
+                            <input type="text" name="valor" id="valor" 
+                                   value="<?php echo $this->turma["valor"]; ?>" />
+                        </td>
+                        <td>Vagas: </td>
+                        <td>
+                            <input type="text" name="vagas" id="vagas" 
+                                   value="<?php echo $this->turma["vagas"]; ?>" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Curso: </td>
+                        <td>
+                            <select name="curso" id="curso">
+                                <?php if(count($this->listaCurso) > 0): ?>
+                                    <?php foreach($this->listaCurso as $c): ?>
+                                <option value="<?php echo $c["idcurso"]; ?>" 
+                                        <?php echo ($this->turma["curso_idcurso"] == $c["idcurso"])?"selected='selected'":""; ?>>
+                                    <?php echo $c["curso"]; ?>
+                                </option>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+                            </select>
+                        </td>
+                        <td>Professor: </td>
+                        <td>
+                            <select name="professor" id="professor">
+                                <option value="">Nao Definido</option>
+                                <?php if(count($this->listaProfessor) > 0): ?>
+                                    <?php foreach($this->listaProfessor as $p): ?>
+                                <option value="<?php echo $p["idusuario"]; ?>" 
+                                        <?php echo ($this->turma["usuario_idusuario"] == $p["idusuario"])?"selected='selected'":""; ?>>
+                                    <?php echo $p["usuario"]; ?>
+                                </option>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Sala: </td>
+                        <td>
+                            <select name="sala" id="sala">
+                                <option value=""></option>
+                                <?php if(count($this->listaSala) > 0): ?>
+                                    <?php foreach($this->listaSala as $s): ?>
+                                <option <?php echo ($this->turma["sala_idsala"] == $s["idsala"])?"selected='selected'":""; ?> value="<?php echo $s["idsala"]; ?>">
+                                    <?php echo $s["sala"]; ?>
+                                </option>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+                            </select>
+                        </td>
+                        <td colspan="2">
+                            <input type="checkbox" name="incompany" id="incompany"
+                                   <?php echo ($this->turma['turmaincompany'] == 1)?"checked='checked'":""; ?>
+                                   value="1" /> InCompany
+                        </td>
+                    </tr>
+                </table>
+          <input type="submit" value="Editar Turma" id="btncadastrar" />
+    </form>
+            </div>
+            
+        </div>
+
+    </div>
+        

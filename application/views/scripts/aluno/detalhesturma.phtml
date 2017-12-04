@@ -1,0 +1,93 @@
+<?php
+$util = new Util_Utilitarios();
+?>
+<script type="text/javascript">
+$(function(){
+    var abas = $("#telacadastrar").tabs();
+    $("#btn").button();
+});
+</script>
+<h3 class="header">
+    Aluno >> Turmas
+</h3>
+<a href="<?php echo $this->url(array('controller' => 'Aluno', 'action' => 'turmas')); ?>" id="btn">Voltar</a>
+
+<p id="resposta">
+    <?php echo $this->resp; ?>
+</p>
+<div id="validate"></div>
+
+    <div id="telacadastrar" title="Turmas Aluno">
+        <div id="telacadastro">
+            <ul>
+                <li><a href="#telaaluno">Observaçao da Turma</a></li>
+            </ul>
+          
+            <div id="telaaluno">
+                <form method="post" id="form1" >
+                    <input type="hidden" name="idaluno" id="idaluno" value="<?php echo $this->aluno["idaluno"]; ?>" />
+                    <input type="hidden" name="idturma" id="idturma" value="<?php echo $this->aluno["idturma"]; ?>" />
+                    <input type="hidden" name="reserva" id="reserva" value="<?php echo $this->aluno["reserva"]; ?>" />
+                <table width="100%">
+                    <tr>
+                        <td colspan="4">
+                            Aluno: <?php echo $this->aluno["nomealuno"]; ?>
+                            <br />
+                            Matrícula: <?php echo $this->aluno["idaluno"]; ?>
+                            <br />
+                            Curso: <?php echo $this->aluno["curso"]; ?>
+                           
+                        </td> 
+                    </tr>
+
+                    <tr>
+                        <td>Forma de Pagamento: </td>
+                        <td>
+                            <?php if(count($this->formaPagamento) > 0): ?>
+                            <select name="pagamento" id="pagamento">
+                                <option value=""></option>
+                                <?php foreach($this->formaPagamento as $pagamento): ?>
+                                <option <?php echo ($this->aluno["formapagamento"] == $pagamento)?"selected='selected'":""; ?> value="<?php echo $pagamento; ?>"><?php echo $pagamento; ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                            <?php endif; ?>
+                        </td>
+                        <td valign="top">Responsável: </td>
+                        <td><input type="text" name="responsavel" id="responsavel" value="<?php echo $this->aluno["responsavel"]; ?>" /></td>
+                    </tr>
+                    <tr>
+                        <td valign="top">Total do Curso: </td>
+                        <td><input type="text" name="valortotal" id="valortotal" value="<?php echo $this->aluno["total"]; ?>" /></td>
+                        <td>Status Aluno: </td>
+                        <td>
+                            <?php if(count($this->statusAluno) > 0): ?>
+                            <select name="statusAluno" id="statusAluno">
+                                <?php foreach($this->statusAluno as $sAluno): ?>
+                                <option <?php echo ($this->aluno["statusturma"] == $sAluno)?"selected='selected'":""; ?> value="<?php echo $sAluno; ?>"><?php echo $sAluno; ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                            <?php endif; ?>
+                        </td>
+                    </tr>
+         
+                    
+                        <tr><td colspan="4">
+                            <input type="checkbox" <?php echo ($this->aluno["pendencia"] == 1)?'checked="checked"':""; ?> name="pendente" value="1" id="pendente" />
+                            Pendente</td></tr>
+                    
+                    <tr>
+                        <td valign="top">Observação: </td>
+                        <td colspan="3">
+                            <textarea name="obs" id="obs" style="width:400px;height: 200px; "><?php echo $this->aluno["obs"]; ?></textarea>
+                        </td>
+                    </tr>
+                </table>
+          <input type="submit" value="Editar a Turma" id="btncadastrar" />
+    </form>
+            </div>
+            
+        </div>
+
+    </div>
+ 
+<br /><br />

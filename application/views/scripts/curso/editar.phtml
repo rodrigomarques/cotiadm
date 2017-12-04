@@ -1,0 +1,172 @@
+<script type="text/javascript" src="<?php echo $this->baseUrl('jscripts/tiny_mce/tiny_mce.js'); ?>"></script>
+<script type="text/javascript">
+	tinyMCE.init({
+		// General options
+		mode : "textareas",
+		theme : "advanced",
+		plugins : "safari,pagebreak,style,layer,table,save,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,template",
+
+		// Theme options
+		theme_advanced_buttons1 : "bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,formatselect,fontselect,fontsizeselect",
+		theme_advanced_buttons2 : "cut,copy,paste,pastetext,pasteword,|,search,replace,|,bullist,numlist,|,outdent,indent,blockquote,|,undo,redo,|,link,unlink",
+		theme_advanced_buttons3 : "code,insertdate,inserttime,preview,|,forecolor,backcolor,|,hr,removeformat,|,sub,sup,|,print,|,fullscreen",
+
+		theme_advanced_toolbar_location : "top",
+		theme_advanced_toolbar_align : "left",
+		theme_advanced_statusbar_location : "bottom",
+		theme_advanced_resizing : false,
+
+
+		// Drop lists for link/image/media/template dialogs
+		template_external_list_url : "lists/template_list.js",
+		external_link_list_url : "lists/link_list.js",
+		external_image_list_url : "lists/image_list.js",
+		media_external_list_url : "lists/media_list.js",
+
+		// Replace values for the template plugin
+		template_replace_values : {
+			username : "Some User",
+			staffid : "991234"
+		}
+	});
+        
+       
+</script>
+<script type="text/javascript">
+$(function(){
+   
+    var abas = $("#telacadastrar").tabs();
+    
+     var validator = $('#form1').validate({
+          rules:{
+                nome:{
+                    required: true,
+                    minlength: 3
+                },
+                cargahoraria : {
+                    required: true,
+                    digits : true
+                },
+                posicao : {
+                    required: true,
+                    digits : true
+                }
+          },
+          messages:{
+                nome:{
+                    required: "O campo nome é obrigatorio.<br />",
+                    minlength: "O campo nome deve conter no mínimo 3 caracteres.<br />"
+                },
+                cargahoraria : {
+                    required: "O campo carga horária é obrigatório<br />",
+                    digits : "Informe apenas números na carga horária<br />"
+                },
+                posicao : {
+                    required: "O campo posição é obrigatório<br />",
+                    digits : "Informe apenas números na posição<br />"
+                }
+          },
+          errorLabelContainer : "#validate"
+     });
+});
+</script>
+<h3 class="header">
+    Cadastrar Curso
+</h3>
+<p id="resposta">
+    <?php echo $this->resp; ?>
+</p>
+<div id="validate"></div><br />
+    <div id="telacadastrar" title="Cadastrar Cursos">
+        <div id="telacadastro">
+            <ul>
+                <li><a href="#telacurso">Curso</a></li>
+            </ul>
+          
+            <div id="telacurso">
+                <form method="post" id="form1">
+                    <input type="hidden" name="idcurso" id="idcurso" value="<?php echo $this->curso["idcurso"]; ?>" />
+                <table width="100%">
+                    <tr>
+                        <td>Nome do Curso:</td> 
+                        <td><input type="text" name="nome" id="nome" value="<?php echo $this->curso["curso"]; ?>" /></td>
+                        <td>Carga Horária:</td> 
+                        <td><input type="text" name="cargahoraria" id="cargahoraria" value="<?php echo $this->curso["cargahoraria"]; ?>" /></td>
+                        <td>Posição:</td> 
+                        <td><input type="text" name="posicao" id="posicao" value="<?php echo $this->curso["posicao"]; ?>" /></td>
+                    </tr>
+                    <tr>
+                        <td>Area: </td>
+                        <td>
+                            <?php if(count($this->listaAreas) > 0): ?>
+                            <select name="area" id="area">
+                                <?php foreach($this->listaAreas as $area): ?>
+                                <option value="<?php echo $area["idarea"]; ?>" 
+                                        <?php echo ($this->curso["idarea"] ==  $area["idarea"])?"selected='selected'":""; ?>>
+                                    <?php echo $area["area"]; ?>
+                                </option>
+                                <?php endforeach; ?>
+                            </select>
+                            <?php endif; ?>
+                        </td>
+                        <td colspan="4">
+                            <input type="checkbox" name="incompany" id="incompany"
+                                   <?php echo ($this->curso['incompany'] == 1)?"checked='checked'":""; ?>
+                                   value="1" /> InCompany
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top">URL: </td>
+                        <td colspan="5">
+                         http://<input type="text" name="urlpagseguro" style="width:470px;" id="urlpagseguro" value="<?php echo $this->curso["urlpagseguro"]; ?>" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top">Resumo: </td>
+                        <td colspan="5">
+                            <textarea id="resumo" name="resumo" style="width:470px;height: 120px;"><?php echo $this->curso["resumo"]; ?></textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top">Ementa: </td>
+                        <td colspan="5">
+                            <textarea id="ementa" name="ementa" class="tinymce" style="width:470px;height: 450px;"><?php echo $this->curso["ementa"]; ?></textarea>
+                        </td>
+                    </tr>
+                </table>
+                    <fieldset>
+                        <legend>AREA DO ANALISTA GOY SEO</legend>
+                    <table width="100%">
+                    <tr>
+                        <td valign="top">TAG: </td>
+                        <td colspan="5">
+                            <input type="text" id="tag" name="tag" style="width:470px;" value="<?php echo $this->curso["tag"]; ?>" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top">Title da página: </td>
+                        <td colspan="5">
+                            <input type="text" id="title" name="title" style="width:470px;" value="<?php echo $this->curso["title"]; ?>" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top">Analista SEO (seu texto aqui): </td>
+                        <td colspan="5">
+                            <input type="text" id="ementa" name="txtseo" style="width:470px;" class="txtseo" value="<?php echo $this->curso["txtseo"]; ?>">
+                        </td>
+                    </tr>
+                    
+                </table>
+                        </fieldset>
+          <input type="submit" value="Editar" id="btncadastrar" />
+    </form>
+            </div>
+            
+        </div>
+
+    </div>
+<a href="<?php echo $this->url(array('controller' => 'Curso', 'action' => 'Index'), null, true); ?>">
+    Voltar
+</a>
+         
+

@@ -1,0 +1,33 @@
+<?php $this->setEscape('htmlentities');?>
+<h3 class="header">
+    Arquivos
+</h3>
+
+<a href="<?php echo $this->url(array('controller' => 'Arquivo', 'action' => 'cadastrar'), NULL, true); ?>" class="btn">
+    Cadastrar Arquivo</a>
+<p id="resposta">
+<?php echo $this->resp; ?>
+</p>
+<?php if(count($this->lista) > 0): ?>
+<table class="dtgrid">
+    <tr>
+        <th>Título</th>
+        <th>Extensão</th>
+        <th>Curso</th>
+        <th>AÇÃO</th>
+    </tr>
+    <?php foreach($this->lista as $arq): ?>
+        <tr>
+            <td><?php echo $arq["titulo"]; ?></td>
+            <td><?php echo $this->util->pegarExtensao($arq["caminho"]); ?></td>
+            <td><?php echo $arq["curso"]; ?></td>
+            <td>
+                <a href="<?php echo $this->url(array('controller' => 'Arquivo', 'action' => 'excluir', 
+                    'params' => $arq["idarquivo"]), NULL, true); ?>">
+                Excluir 
+                </a>
+                </td>
+        </tr>
+    <?php endforeach; ?>
+</table>
+<?php endif; ?>

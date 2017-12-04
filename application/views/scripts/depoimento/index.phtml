@@ -1,0 +1,104 @@
+<script type="text/javascript" src="<?php echo $this->baseUrl('jscripts/tiny_mce/tiny_mce.js'); ?>"></script>
+<script type="text/javascript">
+	tinyMCE.init({
+		// General options
+		mode : "textareas",
+		theme : "advanced",
+		plugins : "safari,pagebreak,style,layer,table,save,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,template",
+
+		// Theme options
+		theme_advanced_buttons1 : "bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,formatselect,fontselect,fontsizeselect",
+		theme_advanced_buttons2 : "cut,copy,paste,pastetext,pasteword,|,search,replace,|,bullist,numlist,|,outdent,indent,blockquote,|,undo,redo,|,link,unlink",
+		theme_advanced_buttons3 : "code,insertdate,inserttime,preview,|,forecolor,backcolor,|,hr,removeformat,|,sub,sup,|,print,|,fullscreen",
+
+		theme_advanced_toolbar_location : "top",
+		theme_advanced_toolbar_align : "left",
+		theme_advanced_statusbar_location : "bottom",
+		theme_advanced_resizing : false,
+
+
+		// Drop lists for link/image/media/template dialogs
+		template_external_list_url : "lists/template_list.js",
+		external_link_list_url : "lists/link_list.js",
+		external_image_list_url : "lists/image_list.js",
+		media_external_list_url : "lists/media_list.js",
+
+		// Replace values for the template plugin
+		template_replace_values : {
+			username : "Some User",
+			staffid : "991234"
+		}
+	});
+        
+       
+</script>
+<script type="text/javascript">
+$(function(){
+    var abas = $("#telacadastrar").tabs();
+});
+</script>
+<h3 class="header">
+    Depoimentos
+</h3>
+
+<div id="telacadastrar" title="Cadastrar Depoimento">
+    <div id="telacadastro">
+        <ul>
+            <li><a href="#teladepoimento">Inserir Depoimento</a></li>
+        </ul>
+
+        <div id="teladepoimento">
+
+            <form method="post" action="<?php echo $this->url(
+                    array('controller' => 'Depoimento', 'action' => 'Index'), NULL, true); ?>" id="form1">
+                <table width="100%">
+                    <tr>
+                        <td>Autor:</td> 
+                        <td><input type="text" name="autor" id="autor" value="<?php echo $this->autor; ?>" /></td>
+                    </tr>
+                    <tr>
+                        <td valign="top">Depoimento:</td> 
+                        <td><textarea id="depoimento" name="depoimento" style="width:600px;height: 400px;"><?php echo $this->depoimento; ?></textarea></td>
+                    </tr>
+                </table>
+                <?php if(!isset($this->iddepoimento)): ?>
+                    <input type="submit" value="Cadastrar" id="btncadastrar" />
+                <?php else: ?>
+                    <input type="hidden" name="id" value="<?php echo $this->iddepoimento; ?>" />
+                    <input type="submit" value="Editar Dados" id="btncadastrar" />
+                <?php endif; ?>
+            </form>
+        </div>
+    </div>
+</div>
+ 
+<p id="resposta">
+<?php echo $this->resp; ?>
+</p>
+<?php if(count($this->dados) > 0): ?>
+<table class="dtgrid">
+    <tr>
+        <th>Autor</th>
+        <th>Depoimento</th>
+        <th>AÇÃO</th>
+    </tr>
+    <?php foreach($this->dados as $d): ?>
+    <tr>
+        <td><?php echo $d["autor"]; ?></td>
+        <td><?php echo substr($d["depoimento"],0,150)."..."; ?></td>
+        <td>
+            <a href="<?php echo $this->url(array('controller' => 'Depoimento', 'action' => 'Editar', 'params' => $d["iddepoimento"])
+                    , NULL, TRUE) ;?>">
+            Editar
+            </a> | 
+            <a href="<?php echo $this->url(array('controller' => 'Depoimento', 'action' => 'Excluir', 'params' => $d["iddepoimento"])
+                    , NULL, TRUE) ;?>">
+            Excluir
+            </a>
+        </td>
+    </tr>
+    <?php endforeach; ?>
+</table>
+<?php echo $this->paginationControl($this->dados, 'sliding', 
+        'pagination.phtml'); ?>
+<?php endif; ?>

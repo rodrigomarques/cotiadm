@@ -1,0 +1,157 @@
+<?php
+$util = new Util_Utilitarios();
+?>
+<script type="text/javascript">
+$(function(){
+   
+    var abas = $("#telacadastrar").tabs();
+    $("#telapagamento").hide()
+    var abas2 = $("#telapagamento").tabs();
+    
+    $(".boleto").button();
+    $(".boleto").live('click', function(){
+        var pagamento = $(this).attr("rel");
+        var caminho = "/admbeta/boleto/boletounitario.php?pagamento=" + pagamento;
+        window.open(caminho,"BOLETOS","width=500,left=10,top=10,right=30");
+    });
+    
+    var validator = $('#form1').validate({
+          rules:{
+                valortotal:{
+                    required: true,
+                    number: true
+                },
+                parcela : {
+                    required : true,
+                    digits : true
+                }
+          },
+          messages:{
+                valortotal:{
+                    required: "Campo valor total é obrigatório<br />",
+                    number: "Informe apenas números no campo valor total<br />"
+                },
+                parcela : {
+                    required : "Campo número de parcelas é obrigatório<br />",
+                    digits : "Informe apenas números nas parcelas<br />"
+                }
+          },
+          errorLabelContainer : "#validate"
+     });
+     
+     $(".btn").button();
+     $(".btn").live('click', function(){
+         var idparcelamento = $(this).attr("rel");
+         $.post(
+                '<?php echo $this->url(array('controller' => 'Aluno', 'action' => 'buscarpagamento')); ?>',
+                {
+                    idparcelamento : idparcelamento
+                },
+                function(data)
+                {
+                    var dados = data.split(";");
+                    $("#valorparcela").val(dados[0]);
+                    $("#valorpago").val(dados[1]);
+                    $("#datacobranca").val(dados[2]);
+                    $("#status option").each(function(){
+                        if($(this).val() == dados[3]){
+                            $(this).attr('selected', 'selected');
+                        }
+                    });
+                    $("#nparcela").val(dados[4]);
+                    $("#idpagamento").val(dados[5]);
+                }
+            );
+         $("#telapagamento").fadeIn();
+     });
+     
+});
+</script>
+<h3 class="header">
+    Lista de Pagamentos
+</h3>
+<div id="validate"></div>
+<p id="resposta">
+    <?php echo $this->resp; ?>
+</p>     
+<?php if(count($this->dadosParcelamento) > 0): ?>
+<table class="dtgrid">
+    <tr>
+        <th>Parcela</th>
+        <th>Valor da Parcela</th>
+        <th>Valor Pago</th>
+        <th>Curso</th>
+        <th>Data Cobrança</th>
+        <th>Status</th>
+        <th></th>
+    </tr>
+    <?php foreach($this->dadosParcelamento as $parcela): ?>
+            <tr>
+                <!--<td><?php //echo str_pad($parcela["nparcela"].$parcela["pagamento_idpagamento"], 7, "0", STR_PAD_LEFT); ?></td>-->
+                <td><?php echo $parcela["nparcela"]; ?></td>
+                <td>R$ <?php echo $util->formatNumber($parcela["valorparcela"]); ?></td>
+                <td>R$ <?php echo $util->formatNumber($parcela["valorpago"]); ?></td>
+                <td><?php echo $parcela["curso"]; ?></td>
+                <td><?php echo $util->converterDataSaida($parcela["datacobranca"]); ?></td>
+                <td><?php echo ($parcela["statusparcela"] == 0)?"Não Pago":"Pago"; ?></td>
+                <td>
+                    <?php if($parcela["statusparcela"] != 1): ?>
+                        <a href="#telapagamento" rel="<?php echo $parcela["nparcela"].";".$parcela["idpagamento"]; ?>" class="btn">Pagamento</a>
+                    <?php endif; ?>
+                </td>
+            </tr>
+    <?php endforeach; ?>
+</table>
+<?php endif; ?>
+<br />
+<div id="telapagamento" title="Pagamento">
+        <div id="telapagamento">
+            <ul>
+                <li><a href="#telapagamento">Dados Pagamento</a></li>
+            </ul>
+          
+            <div id="telapagamento">
+                <form action="<?php echo $this->url(array(
+                    'controller' => 'Aluno', 'action' => 'realizarpagamento'
+                )); ?>" method="post">
+                    <input type="hidden" name="nparcela" id="nparcela" value="" />
+                    <input type="hidden" name="idpagamento" id="idpagamento" value="" />
+                    <table width="100%">
+                        <tr>
+                            <td>Valor da Parcela: </td>
+                            <td>
+                                <input type="text" name="valorparcela" id="valorparcela" value="" />
+                            </td>
+                            <td>Valor Pago: </td>
+                            <td>
+                                <input type="text" name="valorpago" id="valorpago" value="" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Data Cobrança: </td>
+                            <td>
+                                <input type="text" name="datacobranca" id="datacobranca" value="" />
+                            </td>
+                            <td>Status: </td>
+                            <td>
+                                <select name="status" id="status">
+                                    <option value="0" />Não Pago
+                                    <option value="1" />Pago
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td valign="top">Observação: </td>
+                            <td colspan="5">
+                                <textarea name="obs" id="obs" style="width:400px;height: 200px; "><?php echo $this->obs; ?></textarea>
+                            </td>
+                        </tr>
+                    
+                    </table>
+                <input type="submit" value="Modificar" id="btnpagamento" />
+          </form>
+            </div>
+            
+        </div>
+    </div>
+<br /><br />

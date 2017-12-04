@@ -1,0 +1,98 @@
+
+        <script type="text/javascript">
+            $(function(){
+                $("#telacursos").accordion({heightStyle: "content"});
+            })
+        </script>
+        <style>
+            .title{
+                padding: 10px;
+            }
+            .title span{
+                display: none;
+            }
+            #telacursos input[type="checkbox"]{
+                margin-left: 20px;
+            }
+            #validate{
+                color: #FF0000;
+                font-size: 12px;
+            }
+            td{
+                text-align: left;
+                padding: 5px;
+                font-size: 12px;
+            }
+            #telacursos, #telacursos div, #telacursos p{
+                height: auto;
+		display:table;
+		
+            }
+        </style>
+   <script type="text/javascript">
+    $(function() {
+        $("#todoscursos").live('click', function() {
+            var id = $(this).attr("value");
+            var opcao = $(this).attr('checked');
+            $(":checkbox.curso").each(function() {
+                if (opcao == "checked")
+                    $(this).attr('checked', true);
+                else
+                    $(this).attr('checked', false);
+                
+            });
+        });
+    });
+</script>     
+<h3 class="header">
+    RELATORIOS >> Alunos Novos
+</h3>
+                <form method="post" id="form1">
+<input type='checkbox' name='todos[]' class='todoscursos' id='todoscursos' value='1' /> Todos os cursos
+                    <div id="telacursos">
+                        <?php 
+                        if(count($this->dadosCurso) > 0):
+                        $idarea = 0;
+                        $i = 0;
+                        foreach($this->dadosCurso as $cursos): 
+                            $i++;
+                            if($idarea == 0):
+                                $idarea = $cursos["idarea"];
+                                echo "<h3 class='title'>".$cursos["area"]."</h3>";
+                                echo "<div>";
+                                echo "<p>";
+                                echo "<table>";
+                                echo "<tr>";
+                           endif;
+                            
+                            if($idarea != $cursos["idarea"]):
+                                echo "</tr>";
+                                echo "</table>";
+                                echo "</p>";
+                                echo "</div>";
+                                $idarea = $cursos["idarea"];
+                                echo "<h3 class='title'>".$cursos["area"]."</h3>";
+                                echo "<div>";
+                                echo "<p>";
+                                echo "<table>";
+                                echo "<tr>";
+                                $i = 1;
+                            endif;
+                            echo "<td><input type='checkbox' name='cursos[]' class='curso' id='curso' value='".$cursos["idcurso"]."' />" . $cursos["curso"]."</td>";
+                            if($i%3 == 0)
+                                echo "</tr><tr>";
+                        ?>
+                        <?php endforeach; 
+                                echo "</tr>";
+                                echo "</table>";
+                                echo "</p>";
+                                echo "</div>";
+                        ?>
+                        <?php endif;  ?>
+                    </div>
+                    <br /><br />
+                    <input type="submit" value="Buscar Alunos" class="cadastrarcontato" />
+                </form>
+                <div id="validate"></div>
+                <div id="resposta" title="Contatos do Site"></div>
+          

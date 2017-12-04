@@ -1,0 +1,240 @@
+<?php
+$util = new Util_Utilitarios();
+?>
+<script type="text/javascript">
+$(function(){
+   
+    var abas = $("#telacadastrar").tabs();
+    $("#turmas").live('change', function(){
+        
+        var valor = $(this).val();
+        if(valor != "" && valor != 0){
+            $.post('<?php echo $this->url(array('controller' => 'Aluno', 'action' => 'conferir')); ?>',
+                    { 
+                        id : valor
+                    },
+                    function(result){
+                        if(result != "")
+                            {
+                                alert(result);
+                            }
+                    });
+           }
+    });
+    
+    $("#curso").live('change', function(){
+        $("#labelturma").text("Turma: ");
+        var valor = $(this).val();
+        if(valor != "")
+        {
+            $.post('<?php echo $this->url(array('controller' => 'Aluno', 'action' => 'listarcursos')); ?>',
+                    { 
+                        id : valor 
+                    },
+                    function(result){
+                        $("#divturma").html(result);
+                    });
+        }
+        else
+        {
+            $("#labelturma").text("");
+            $("#divturma").html("");
+        }
+    });
+    
+    $(".contrato").live('click', function(){
+        var aluno = $(this).attr("rel");
+        var turma = $(this).attr("value");
+        var caminho = "<?php echo $this->url(array(
+            'controller' => 'Aluno', 'action' => 'boleto'
+        ),null, true); ?>/aluno/" + aluno + '/turma/' + turma;
+        window.open(caminho,"CONTRATO","width=600,left=10,top=10,right=30");
+    });
+    
+    var validator = $('#form1').validate({
+          rules:{
+                pagamento:{
+                    required: true
+                    
+                },
+                valortotal : {
+                    number : true
+                }
+          },
+          messages:{
+                pagamento:{
+                    required: "Forma de pagamento é obrigatória<br />"
+                    
+                },
+                valortotal : {
+                    number : "Informe um valor valido ao campo valor total<br />"
+                }
+          },
+          errorLabelContainer : "#validate"
+     });
+});
+</script>
+<h3 class="header">
+    Aluno >> Turmas
+</h3>
+
+<p id="resposta">
+    <?php echo $this->resp; ?>
+</p>
+<div id="validate"></div>
+
+    <div id="telacadastrar" title="Turmas Aluno">
+        <div id="telacadastro">
+            <ul>
+                <li><a href="#telaaluno">Vincular a Turma</a></li>
+            </ul>
+          
+            <div id="telaaluno">
+                <form method="post" id="form1" >
+                <table width="100%">
+                    <tr>
+                        <td colspan="4">
+                            Aluno: <?php echo $this->aluno["nome"]; ?>
+                            <br />
+                            Matrícula: <?php echo $this->aluno["idaluno"]; ?>
+                            <p>
+                                * A Matrícula do aluno é referente ao codigo gerado pelo banco do mesmo.
+                            </p>
+                        </td> 
+                    </tr>
+                     <tr>
+                        <td>Curso: </td>
+                        <td>
+                            <?php if(count($this->listaCurso) > 0): ?>
+                            <select name="curso" id="curso">
+                                <option value=""></option>
+                                <?php foreach($this->listaCurso as $curso): ?>
+                                <option value="<?php echo $curso["idcurso"]; ?>"><?php echo $curso["curso"];  ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                            <?php endif; ?>
+                        </td>
+                        <td>
+                            <div id="labelturma">
+                            </div>
+                        </td>
+                        <td colspan="3">
+                            <div id="divturma">
+                            </div>
+                        </td>
+                        </tr>
+                        <?php /*
+                    <tr>
+                        <td>Turma:</td> 
+                        <td>
+                            <?php if(count($this->listaTurma)): ?>
+                            <select name="turma" id="turma">
+                                <?php foreach($this->listaTurma as $t): ?>
+                                <option value="<?php echo $t["idturma"]; ?>"><?php echo $t["curso"] . " -- " 
+        .$util->converterDataSaida($t["inicio"]) . " -- " . $t["horario"]; ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                            <?php endif; ?>
+                        </td>
+                         * 
+                         */ ?>
+                        <tr>
+                        <td>Refazendo:</td> 
+                        <td>
+                            <input type="checkbox" name="refazendo" value="1" />
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Forma de Pagamento: </td>
+                        <td>
+                            <?php if(count($this->formaPagamento) > 0): ?>
+                            <select name="pagamento" id="pagamento">
+                                <option value=""></option>
+                                <option value="REFAZENDO">REFAZENDO</option>
+                                <?php foreach($this->formaPagamento as $pagamento): ?>
+                                <option value="<?php echo $pagamento; ?>"><?php echo $pagamento; ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                            <?php endif; ?>
+                        </td>
+                        <td valign="top">Responsável: </td>
+                        <td><input type="text" name="responsavel" id="responsavel" value="<?php echo $this->responsavel; ?>" /></td>
+                    </tr>
+                    <tr>
+                        <td valign="top">Total do Curso: </td>
+                        <td><input type="text" name="valortotal" id="valortotal" value="<?php echo $this->valortotal; ?>" /></td>
+                        <td colspan="3">
+                            <input type="checkbox" name="alunoreserva" value="1" id="alunoreserva" />Reserva
+                            <input type="checkbox" name="pendente" value="1" id="pendente" />Pendente
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top">Observação: </td>
+                        <td colspan="5">
+                            <textarea name="obs" id="obs" style="width:400px;height: 200px; "><?php echo $this->obs; ?></textarea>
+                        </td>
+                    </tr>
+                </table>
+          <input type="submit" value="Adicionar a Turma" id="btncadastrar" />
+    </form>
+            </div>
+            
+        </div>
+
+    </div>
+         
+
+<?php if(count($this->turmasAluno) > 0): ?>
+<table class="dtgrid">
+    <tr>
+        <th>Curso</th>
+        <th>Frequencia</th>
+        <th>Horário</th>
+        <th>Inicio</th>
+		<th>Fim</th>
+        <th>Pagamento</th>
+        <th>Responsável</th>
+        <th>Professor</th>
+        <th>Status</th>
+        <th>Total</th>
+        <th>Reserva</th>
+        <th>Cadastro</th>
+        <th>Situação</th>
+        <th>AÇÃO</th>
+    </tr>
+    <?php foreach($this->turmasAluno as $al): ?>
+        <tr>
+            <td><?php echo $al["curso"]; ?></td>
+            <td><?php echo $al["frequencia"]; ?></td>
+            <td><?php echo $al["horario"]; ?></td>
+            <td><?php echo $util->converterDataSaida($al["inicio"]); ?></td>
+			<td><?php echo $util->converterDataSaida($al["fim"]); ?></td>
+            <td><?php echo $al["formapagamento"]; ?></td>
+            <td><?php echo $al["responsavel"]; ?></td>
+            <td><?php echo $al["nome"]; ?></td>
+            <td><?php echo ($al["refazendo"] == 1)?'Refazendo':'Novo'; ?></td>
+            <td>R$ <?php echo $util->formatNumber($al["total"]); ?></td>
+            <td><?php echo ($al["reserva"] == 1)?'Reserva':'Aluno'; ?></td>
+            <td><?php echo $al["cadastro"]; ?></td>
+            <td><?php echo $al["statusturma"]; ?></td>
+            <td>
+                <a href="<?php echo $this->url(array('controller' => 'Aluno', 'action' => 'excluirturmas', 
+                    'params' => $al["aluno_idaluno"], 'paramsturma' => $al["turma_idturma"])); ?>">Excluir</a>
+            | 
+            <a href="#" class="contrato" 
+                rel="<?php echo $al["aluno_idaluno"] ?>" value="<?php echo $al["turma_idturma"]; ?>">Contrato</a>
+            | 
+            
+                <a href="<?php echo $this->url(array('controller' => 'Aluno', 'action' => 'pagamento', 
+                    'param1' => $al["aluno_idaluno"], 'param2' => $al["turma_idturma"]), NULL, true); ?>">Pagamento</a>
+                
+            | 
+            <a href="<?php echo $this->url(array('controller' => 'Aluno', 'action' => 'detalhesturma', 
+                    'params' => $al["aluno_idaluno"], 'paramsturma' => $al["turma_idturma"])); ?>">Detalhes</a>
+            </td>
+        </tr>
+    <?php endforeach; ?>
+</table>
+<?php endif; ?>
+<br /><br />

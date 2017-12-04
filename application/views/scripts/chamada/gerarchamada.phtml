@@ -1,0 +1,85 @@
+<?php
+$util = new Util_Utilitarios();
+?>
+<script type="text/javascript">
+$(function(){
+   
+    var abas = $("#telacadastrar").tabs();
+    
+    $("#dtpresenca").datepicker({
+        changeMonth : true,
+        changeYear : true,
+        maxDate : new Date(),
+        minDate : '01/08/2014'
+    });
+    
+    var validator = $('#form1').validate({
+          rules:{
+               dtpresenca : {
+                   required : true
+               } 
+          },
+          messages:{
+               dtpresenca : {
+                   required : "Preencha o campo data da presença<br />"
+               }  
+          },
+          errorLabelContainer : "#validate"
+     });
+});
+</script>
+<h3 class="header">
+    Gerar Chamada
+</h3>
+
+<div id="validate"></div>
+    <div id="telacadastrar" title="Turmas">
+        <div id="telacadastro">
+            <ul>
+                <li><a href="#telaturma">Confirmar Presença</a></li>
+            </ul>
+          
+            <div id="telaturma">
+                <form method="post" id="form1" action="<?php echo $this->url(array('controller' => 'Chamada', 
+                    'action' => 'confirmar'), null, true); ?>">
+                    <input type="hidden" name="turma" id="turma" value="<?php echo $this->turma; ?>" />
+                    Data da Presença: <input type="text" readonly="readonly" name="dtpresenca" id="dtpresenca" value="<?php echo date('d/m/Y'); ?>" />
+                <input type="submit" value="Finalizar Chamada" id="btn" />
+                <?php if(count($this->alunos) > 0): ?>
+                <table class="dtgrid">
+                <tr>
+                    <th></th>
+                    <th>Nome Aluno</th>
+                    <th>Presente</th>
+                </tr>
+                <?php foreach($this->alunos as $aluno): ?>
+                <tr>
+                    <td>
+                        <input type="checkbox" value="<?php echo $aluno["aluno_idaluno"]; ?>" name="presentes[]"
+                            <?php echo (in_array($aluno["idaluno"], isset($this->presentes)?$this->presentes:array()))==1?"checked='checked'":""; ?>   /> 
+                    </td>
+                    <td>
+                        <?php echo $aluno["nomealuno"]; ?>
+                    </td>
+                    <td>
+                        <?php 
+                        echo (in_array($aluno["idaluno"], isset($this->presentes)?$this->presentes:array()))==1?"Presente":"Faltou";
+                         ?>
+                    </td>
+                </tr>
+                <?php endforeach; ?>
+                </table>
+                <?php endif; ?>
+                
+            </form>
+            </div>
+            
+        </div>
+
+    </div>
+         
+
+<p id="resposta">
+    <?php echo $this->resp; ?>
+</p>
+<a href="<?php echo $this->url(array('controller' => 'Chamada', 'action' => 'index'), NULL, true); ?>">Voltar</a>

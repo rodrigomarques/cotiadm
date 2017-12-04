@@ -1,0 +1,85 @@
+<script type="text/javascript">
+$(function(){
+   
+   var validate = $("#form1").validate({
+       rules:{
+                codigo : {
+                    required : true
+                },
+                valor : {
+                    required : true,
+                    number : true
+                }
+          },
+          messages:{
+              codigo : {
+                    required : "Informe um valor para o campo codigo<br />"
+                },
+                valor : {
+                    required : "Campo valor é obrigatório<br />",
+                    number : "Informe números validos no valor<br />"
+                }
+          },
+          errorLabelContainer : "#validate"
+     });
+   
+    var abas = $("#telacadastrar").tabs();
+    
+    $("#dtinicio").datepicker({
+        changeMonth : true,
+        changeYear : true,
+        onSelect : function(dataSelecionada){
+            $("#dtfim").datepicker("option", "minDate", dataSelecionada);
+        }
+    });
+    
+    $("#dtfim").datepicker({
+        changeMonth : true,
+        changeYear : true
+    });
+});
+</script>
+<h3 class="header">
+    Cadastrar Promoção
+</h3>
+<a href="<?php echo $this->url(array('controller' => 'Promocao'), NULL, true); ?>" class="btn">Voltar</a>
+<br  /><br  />  
+
+ <div id="validate"></div>
+<p id="resposta">
+<?php echo $this->resp; ?>
+</p>
+<div id="telacadastrar" title="CADASTRAR PROMOÇÃO">
+    <ul>
+        <li><a href="#telacad">Cadastrar Promoção</a></li>
+    </ul>
+    
+    <div id="telacad">
+        <form method="post" id="form1">
+            
+            <table width="100%">
+                <tr>
+                    <td>Código da Promoção:</td> 
+                    <td><input type="text" name="codigo" id="codigo" value="<?php echo $this->codigo; ?>" /></td>
+                    <td>Valor Desconto: </td>
+                    <td><input type="text" name="valor" id="valor" value="<?php echo $this->valor; ?>" /></td>
+                </tr>
+                <tr>
+                    <td>Início: </td>
+                    <td><input type="text" name="dtinicio" id="dtinicio" value="<?php echo $this->dtinicio; ?>" /></td>
+                    <td>Fim:</td> 
+                    <td><input type="text" name="dtfim" id="dtfim" value="<?php echo $this->dtfim; ?>" /></td>
+                </tr>
+                <tr>
+                    <td valign="top">OBS:</td>
+                    <td colspan="3">
+                        <textarea style="width: 400px;height: 200px" name="obs" id="obs"><?php echo $this->obs; ?></textarea>
+                    </td>
+                </tr>
+            
+            </table>
+            <input type="submit" value="Cadastrar" class="btn" />
+        </form>
+    </div>
+</div>
+<br /><br />

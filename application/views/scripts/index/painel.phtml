@@ -1,0 +1,72 @@
+
+<script type="text/javascript">
+$(function(){
+    $("#mudarsenha").button();
+    $(".telausuario").hide();
+    $("#mudarsenha").live("click", function(){
+        $(".telausuario").dialog({modal:true});
+    });
+    
+    $("#btncadastrar").live('click', function(){
+        
+        var senhaatual = $("#senhaatual").val();
+        var novasenha = $("#novasenha").val();
+        var confirmarsenha = $("#confirmarsenha").val();
+        
+        if(senhaatual == "")
+        {
+            $("#resp").html("Preencha a senha atual");
+        }
+        else if(novasenha == "")
+        {
+            $("#resp").html("Preencha uma nova senha");
+        }
+        else if(novasenha != confirmarsenha)
+        {
+            $("#resp").html("As senhas devem ser iguais");
+        }
+        else
+        {
+            $.post(
+                '<?php echo $this->url(array('controller' => 'Index', 'action' => 'alterarsenha')); ?>',
+                {
+                    id : $("#id").val(),
+                    novasenha : $("#novasenha").val()
+                },
+                function(data){
+                    $("#resp").html(data);
+                }
+            );
+        }
+        
+        return false;
+    });
+});
+</script>
+<h3 class="header">
+    Painel do Sistema
+</h3>
+<a href="#" id="mudarsenha">Alterar Senha</a>
+<div class="telausuario" title="Mudar a Senha">
+
+    <form method="post" id="form1">
+        <input type="hidden" name="id" value="<?php echo $this->session->idusuario; ?>" id="id" />
+        <table width="100%">
+            <tr>
+                <td>Senha Atual:</td> 
+                <td><input type="password" name="senhaatual" id="senhaatual" /></td>
+            </tr>
+            <tr>
+                <td>Nova Senha:</td> 
+                <td><input type="password" name="novasenha" id="novasenha" /></td>
+            </tr>
+            <tr>
+                <td>Confirmar Senha:</td> 
+                <td><input type="password" name="confirmarsenha" id="confirmarsenha" /></td>
+            </tr>
+        </table>
+        <input type="submit" value="Alterar Senha" id="btncadastrar" />
+        <div id="resp"></div>
+        <?php echo $this->resp; ?>
+    </form>
+</div>

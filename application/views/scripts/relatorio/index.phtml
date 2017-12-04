@@ -1,0 +1,28 @@
+<?php $this->setEscape('htmlentities');?>
+<script type="text/javascript">
+    $(function(){
+       
+    });
+</script>
+<h3 class="header">
+    RELATORIOS
+</h3>
+<a href="<?php echo $this->url(array('controller' => 'Relatorio', 'action' => 'turmaprofessor'),
+        NULL, true); ?>" class="btn">
+    Relatórios de Turmas / Professor
+</a>
+
+<a href="<?php echo $this->url(array('controller' => 'Relatorio', 'action' => 'alunonovo'),
+        NULL, true); ?>" class="btn">
+    Relatórios de Alunos / Mes
+</a>
+
+<a href="<?php echo $this->url(array('controller' => 'Relatorio', 'action' => 'statusaluno'),
+        NULL, true); ?>" class="btn">
+    Relatórios da Situação Alunos / Mes
+</a>
+
+<a href="<?php echo $this->url(array('controller' => 'Relatorio', 'action' => 'emailalunos'),
+        NULL, true); ?>" class="btn">
+    Lista de E-mails Alunos
+</a>

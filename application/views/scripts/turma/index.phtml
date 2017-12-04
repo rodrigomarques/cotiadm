@@ -1,0 +1,121 @@
+﻿<script type="text/javascript">
+$(function(){
+    $("#inicio").datepicker({
+        changeMonth : true,
+        changeYear : true
+    });
+    
+});
+</script>
+<?php $this->setEscape('htmlentities');
+    $util = new Util_Utilitarios();
+?>
+<h3 class="header">
+    Turmas
+</h3>
+
+<a href="<?php echo $this->url(array('controller' => 'Turma', 'action' => 'cadastrar'), NULL, true); ?>" class="btn">
+    Cadastrar Turmas</a>
+
+<a href="<?php echo $this->url(array('controller' => 'Sala', 'action' => 'index'), NULL, true); ?>" class="btn">
+    Salas</a>
+<form method="post" action="<?php echo $this->url(array('controller' => 'Turma', 'action' => 'index'), NULL, true); ?>">
+    Início: <input type="text" name="inicio" id="inicio" value="<?php echo $this->inicio; ?>" />
+    Professor:
+    <?php if(count($this->listaProfessor) > 0): ?>
+    <select name="professor" id="professor">
+        <option value=""></option>
+        <?php foreach($this->listaProfessor as $professor): ?>
+        <option value="<?php echo $professor["idusuario"]; ?>" <?php echo ($this->professor == $professor["idusuario"])?"selected='selected'":""; ?>>
+            <?php echo $professor["usuario"]; ?>
+        </option>
+        <?php endforeach; ?>
+    </select>
+    <?php endif; ?>
+    Curso:
+    <?php if(count($this->listaCurso) > 0): ?>
+    <select name="curso" id="curso">
+        <option value=""></option>
+        <?php foreach($this->listaCurso as $curso): ?>
+        <option value="<?php echo $curso["idcurso"]; ?>" <?php echo ($this->curso == $curso["idcurso"])?"selected='selected'":""; ?>>
+            <?php echo $curso["curso"]; ?>
+        </option>
+        <?php endforeach; ?>
+    </select>
+    
+    <?php endif; ?>
+    Status:
+    <select name="status" id="status">
+        <option value=""></option>
+        <option value="1">Ativos</option>
+        <option value="0">Não Ativos</option>
+    </select>
+    Sala:
+    <?php if(count($this->listaSala) > 0): ?>
+    <select name="sala" id="sala">
+        <option value=""></option>
+        <?php foreach($this->listaSala as $sala): ?>
+        <option value="<?php echo $sala["idsala"]; ?>" <?php echo ($this->sala == $sala["idsala"])?"selected='selected'":""; ?>>
+            <?php echo $sala["sala"]; ?>
+        </option>
+        <?php endforeach; ?>
+    </select>
+    
+    <?php endif; ?>
+    <input type="submit" value="Buscar Turma" class="btn" />
+</form>
+<p id="resposta">
+<?php echo $this->resp; ?>
+</p>
+<?php if(count($this->dados) > 0): ?>
+<table class="dtgrid">
+    <tr>
+        <th>Curso</th>
+        <th>Frequencia</th>
+        <th>Horário</th>
+        <th>Inicio</th>
+        <th>Fim</th>
+        <th>Valor</th>
+        <th>Vagas</th>
+        <th>Professor</th>
+        <th>Sala</th>
+        <th>Status</th>
+        <th>AÇÃO</th>
+    </tr>
+    <?php foreach($this->dados as $t): ?>
+        <tr>
+            <td><?php echo $t["curso"]; ?></td>
+            <td><?php echo $t["frequencia"]; ?></td>
+            <td><?php echo $t["horario"]; ?></td>
+            <td><?php echo $util->converterDataSaida($t["inicio"]); ?></td>
+            <td><?php echo $util->converterDataSaida($t["fim"]); ?></td>
+            <td><?php echo $t["valor"]; ?></td>
+            <td><?php echo $t["vagas"]; ?></td>
+            <td><?php echo $t["nome"]; ?></td>
+            <td><?php echo $t["sala"]; ?></td>
+            <td><?php echo ($t["statusturma"] == 1)?"Ativo":"Não Ativo"; ?></td>
+            <td width="70px">
+                <a href="<?php echo $this->url(array('controller' => 'Turma', 'action' => 'editar',
+                    'params' => $t["idturma"]), null, true); ?>">
+                <img src="<?php echo $this->baseUrl("img/ico_edit.png");?>" title="Editar Turma"/></a>
+                 
+                <a href="<?php echo $this->url(array('controller' => 'Turma', 'action' => 'excluir',
+                    'params' => $t["idturma"]), null, true); ?>">
+                    <img src="<?php echo $this->baseUrl((($t["statusturma"] == 1)?"img/ico_disable.png":"img/ico_ok.png")); ?>" title="Ativar / Desativar"/></a>
+                
+                <a href="<?php echo $this->url(array('controller' => 'Turma', 'action' => 'veralunos',
+                    'params' => $t["idturma"]), null, true); ?>">
+                    <img src="<?php echo $this->baseUrl("img/ico_alunos.png");?>" title="Ver Alunos"/></a>
+                
+                <a href="<?php echo $this->url(array('controller' => 'Turma', 'action' => 'excluirturma',
+                    'params' => $t["idturma"]), null, true); ?>">
+                    <img src="<?php echo $this->baseUrl("img/ico_delete.png");?>" title="Excluir Turma"/></a>
+                </td>
+        </tr>
+    <?php endforeach; ?>
+</table>
+<?php endif; ?>
+<p>
+    * Se a turma estiver ATIVA porem nao aparecer em calendário, verifique se o status do curso desta turma. Um turma mesmo que ATIVA sera 
+    vista no calendário apenas se o curso também estiver ATIVO.
+</p>

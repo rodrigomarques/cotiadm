@@ -1,0 +1,137 @@
+<script type="text/javascript">
+$(function(){
+    var abas = $("#telacadastrar").tabs();
+    
+    $(".excluirInteresse").live('click', function(){
+        var id = $(this).attr('rel');
+        $("#telaexcluir").html("Deseja excluir este contato?");
+        $("#telaexcluir").dialog({
+            modal : true,
+            buttons : {
+                Excluir : function(){
+                    $.post('<?php echo $this->url(array('controller' =>'Contato', 
+                            'action' => 'excluir'), NULL, true); ?>',
+                            {
+                                id : id
+                            },
+                            function(result){
+                                $("#telaexcluir").html(result);
+                                if(result == "Interesse do site excluído com sucesso!"){
+                                $( this ).dialog( "close" );
+                                location.href = '<?php echo $this->url(array('controller' =>'Contato', 
+                            'action' => 'Index'), NULL, true); ?>';
+                                }
+                                }
+                          );
+                },
+                Cancelar : function(){
+                    $( this ).dialog( "close" );
+                }
+            },
+            close : function(){
+                location.href = '<?php echo $this->url(array('controller' =>'Contato', 
+                            'action' => 'Index'), NULL, true); ?>';
+            }
+        });
+    });
+});
+</script>
+<h3 class="header">
+    Contatos do Site >> Interesse
+</h3>
+<form method="post" action="<?php echo $this->url(array('controller' => 'Contato', 'action' => 'Index'), NULL, true); ?>">
+    Aluno: <input type="text" name="aluno" id="aluno" value="<?php echo $this->aluno; ?>" />
+    E-mail: <input type="text" name="email" id="email" value="<?php echo $this->email; ?>" />
+    Turno:
+    <select name="turno" id="turno">
+        <option value=""></option>
+        <option value="MANHA" <?php echo ($this->turno == "MANHA")?"selected='selected'":""; ?>>MANHA</option>
+        <option value="TARDE" <?php echo ($this->turno == "TARDE")?"selected='selected'":""; ?>>TARDE</option>
+        <option value="NOITE" <?php echo ($this->turno == "NOITE")?"selected='selected'":""; ?>>NOITE</option>
+    </select>
+    Curso: 
+    <select name="curso" id="curso">
+        <option value="">TODOS</option>
+    <?php if(count($this->listaCurso) > 0): ?>
+    <?php foreach($this->listaCurso as $c): ?>
+        <option value="<?php echo $c["idcurso"]; ?>" <?php echo ($this->curso == $c["idcurso"])?"selected='selected'":""; ?>>
+            <?php echo $c["curso"]; ?></option>
+    <?php endforeach; ?>
+    <?php endif; ?>
+    </select>
+    Realizado: 
+    <select name="realizado" id="realizado">
+        <option value="-1">
+            TODOS</option>
+        <option value="0" <?php echo ($this->realizado == 0)?"selected='selected'":""; ?>>
+            NOVO</option>
+    <option value="1" <?php echo ($this->realizado == 1)?"selected='selected'":""; ?>>
+            VELHO</option>
+    </select>
+    <br />
+    Dias: 
+    <input type="checkbox" name="dias[]" id="dias" <?php echo (isset($this->dias) && 
+            is_array($this->dias) && in_array('seg', $this->dias))?'checked="checked"':""; ?> value="seg" />Segunda-feira
+    <input type="checkbox" name="dias[]" id="dias" value="ter" <?php echo (isset($this->dias) && 
+            is_array($this->dias) && in_array('ter', $this->dias))?'checked="checked"':""; ?> />Terça-feira
+    <input type="checkbox" name="dias[]" id="dias" value="qua" <?php echo (isset($this->dias) && 
+            is_array($this->dias) && in_array('qua', $this->dias))?'checked="checked"':""; ?> />Quarta-feira
+    <input type="checkbox" name="dias[]" id="dias" value="qui" <?php echo (isset($this->dias) && 
+            is_array($this->dias) && in_array('qui', $this->dias))?'checked="checked"':""; ?> />Quinta-feira
+    <input type="checkbox" name="dias[]" id="dias" value="sex" <?php echo (isset($this->dias) && 
+            is_array($this->dias) && in_array('sex', $this->dias))?'checked="checked"':""; ?> />Sexta-feira
+    <input type="checkbox" name="dias[]" id="dias" value="sab" <?php echo (isset($this->dias) && 
+            is_array($this->dias) && in_array('sab', $this->dias))?'checked="checked"':""; ?> />Sabado
+    <input type="checkbox" name="dias[]" id="dias" value="dom" <?php echo (isset($this->dias) && 
+            is_array($this->dias) && in_array('dom', $this->dias))?'checked="checked"':""; ?> />Domingo
+    <br /><br />
+    <input type="submit" value="Buscar Contatos" class="btn" />
+    <input type="checkbox" name="exportar" id="exportar" value="1" <?php echo (isset($this->exportar) && 
+            $this->exportar == '1')?'checked="checked"':""; ?> />Exportar
+</form>
+<p id="resposta">
+<?php echo $this->resp; ?>
+</p>
+<?php if(count($this->lista) > 0): ?>
+<table class="dtgrid">
+    <tr>
+        <th></th>
+        <th>Nome</th>
+        <th>E-mail</th>
+        <th>Telefone</th>
+        <th>Turno</th>
+        <th>Dias</th>
+        <th>Dias</th>
+        <th>Data</th>
+        <th>AÇÃO</th>
+    </tr>
+    <form action="<?php echo $this->url(array('controller' => 'Contato', 'action' => 'excluirall'), null, true); ?>" method="post">
+    <?php foreach($this->lista as $contato): ?>
+        <tr>
+            <td>
+                <input type="checkbox" name="ckidinteresse[]" class="ckidinteresse" value="<?php echo $contato["idinteresse"]; ?> " />
+            </td>
+            <td><?php echo $contato["nome"]; ?></td>
+            <td><?php echo $contato["email"]; ?></td>
+            <td><?php echo $contato["telefone"]; ?></td>
+            <td><?php echo $contato["turno"]; ?></td>
+            <td><?php echo $contato["dias"]; ?></td>
+            <td><?php echo $contato["curso"]; ?></td>
+            <td><?php echo $contato["datahora"]; ?></td>
+            <td>
+                <a href="#" class="excluirInteresse" rel="<?php echo $contato["idinteresse"]; ?> ">
+                <img src="<?php echo $this->baseUrl("img/ico_delete.png");?>" title="Excluir Aluno"/></a>
+                |
+                <a href="<?php echo $this->url(array('controller' => 'Contato', 'action' => 'atualizarcontato',
+                    'param1' => $contato["idinteresse"]), NULL, true); ?>">
+                    <?php echo (($contato["statusinteresse"] == 0)?"Novo":"Velho"); ?>
+                </a>
+            </td>
+        </tr>
+    <?php endforeach; ?>
+        <input type="submit" value="Deletar Selecionados" id="btn" />
+    </form>
+</table>
+<?php endif; ?>
+<div id="telaexcluir" title="Deseja excluir este contato?">
+</div>

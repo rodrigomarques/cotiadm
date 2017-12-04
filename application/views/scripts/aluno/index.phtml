@@ -1,0 +1,127 @@
+<script type="text/javascript">
+$(function(){
+    $(".paineldetalhes").hide();
+    
+    $("#cpf").mask("999.999.999-99");
+    $(".excluirAluno").bind('click', function(){
+        var caminho = $(this).attr("href");
+        $(".telaexcluir").html("DESEJA EXCLUIR ESTE ALUNO? VAI FAZER BESTEIRA!");
+        $(".telaexcluir").dialog({
+                modal: true,
+                buttons: {
+                    "Sim": function() {
+                        location.href = caminho;
+                    },
+                    "Não": function() {
+                        $(this).dialog("close");
+                    }
+                }
+            });
+        
+        return false;
+    });
+    
+    <?php if($this->idaluno > 0): ?>
+        var id = $(this).attr('rel');
+        $(".detalhe").html(id);
+        $(".paineldetalhes").dialog({});
+    <?php endif; ?>
+    
+});
+</script>
+﻿<?php $this->setEscape('htmlentities');
+$util = new Util_Utilitarios();?>
+<h3 class="header">
+    Alunos 
+  
+</h3>
+<div class="telaexcluir" title="EXCLUIR ARQUIVO"></div>
+<div class="paineldetalhes" title="DETALHES ALUNO">
+    <?php 
+    $id = isset($this->idaluno)?$this->idaluno:0;
+    if($id > 0):
+        echo $this->alunoDetalhes($id); 
+    endif;
+    ?>
+</div>
+
+<a href="<?php echo $this->url(array('controller' => 'Aluno', 'action' => 'cadastrar'), NULL, true); ?>" class="btn">
+    Cadastrar Aluno</a>
+
+<a href="<?php echo $this->url(array('controller' => 'Aluno', 'action' => 'relatoriopendente'), NULL, true); ?>" class="btn">
+    Relatório de Alunos Pendentes</a>
+<form method="get" action="<?php echo $this->url(array('controller' => 'Aluno', 'action' => 'index')); ?>">
+    Nome do Aluno: <input type="text" name="nome" id="nome" value="<?php echo $this->nome; ?>" />
+    Matrícula: <input type="text" name="matricula" id="matricula" value="<?php echo $this->matricula; ?>" style="width: 50px" />
+    Email: <input type="text" name="email" id="email" value="<?php echo $this->email; ?>" />
+    Cpf: <input type="text" name="cpf" id="cpf" value="<?php echo $this->cpf; ?>" />
+    Curso: 
+    <?php if(count($this->listaCurso) > 0): ?>
+    <select name="curso" id="curso">
+        <option value=""></option>
+        <?php foreach($this->listaCurso as $curso): ?>
+        <option value="<?php echo $curso["idcurso"]; ?>" 
+                <?php echo $curso["idcurso"] == $this->curso?"selected":""; ?>><?php echo $curso["curso"];  ?></option>
+        <?php endforeach; ?>
+    </select>
+    <?php endif; ?>
+    <input type="submit" value="Buscar Alunos" class="btn" />
+</form>
+<p id="resposta">
+<?php echo $this->resp; ?>
+</p>
+<?php if(count($this->dados) > 0): ?>
+<table class="dtgrid">
+    <tr>
+        <th><a href="<?php echo $this->url(array('controller' => 'Aluno', 'action' => 'index', 'order' => 'idaluno'), NULL, true); ?>">
+    Matrícula</a></th>
+        <th><a href="<?php echo $this->url(array('controller' => 'Aluno', 'action' => 'index', 'order' => 'nome'), NULL, true); ?>">
+    Nome</a></th>
+        <th>E-mail</th>
+        <th>Sexo</th>
+        <th>Nascimento</th>
+        <th>Cpf</th>
+        <th>Telefone</th>
+        <th>Celular</th>
+        <th>AÇÃO</th>
+    </tr>
+    <?php foreach($this->dados as $al): 
+		$cor = "";
+		if($al["devedor"] == 1)
+			$cor = "style='background-color:#F44;'";
+	?>
+        <tr <?php echo $cor; ?>>
+            <td><?php echo $al["idaluno"]; ?></td>
+            <td><?php echo $al["nome"]; ?></td>
+            <td><?php echo $al["email"]; ?></td>
+            <td><?php echo $al["sexo"]; ?></td>
+            <td><?php echo $util->converterDataSaida($al["nascimento"]); ?></td>
+            <td><?php echo $al["cpf"]; ?></td>
+            <td><?php echo $al["telefone"]; ?></td>
+            <td><?php echo $al["celular"]; ?></td>
+            <td width="110px"> 
+                <a href="<?php echo $this->url(array('controller' => 'Aluno', 'action' => 'edit', 
+                    'params' => $al["idaluno"]), NULL, true); ?>"><img src="<?php echo $this->baseUrl("img/ico_edit.png");?>" title="Editar Aluno"/></a> 
+		<a href="<?php echo $this->url(array('controller' => 'Aluno', 'action' => 'excluir', 
+                    'params' => $al["idaluno"]), NULL, true); ?>" class="excluirAluno"><img src="<?php echo $this->baseUrl("img/ico_delete.png");?>" title="Excluir Aluno"/></a>
+                <a href="<?php echo $this->url(array('controller' => 'Aluno', 'action' => 'turmas', 
+                    'params' => $al["idaluno"]), NULL, true); ?>"><img src="<?php echo $this->baseUrl("img/ico_turmas.png");?>" title="Alocar em turma"/></a>
+                <a href="<?php echo $this->url(array('controller' => 'Aluno', 'action' => 'pagamentoaluno', 
+                    'params' => $al["idaluno"]), NULL, true); ?>"><img src="<?php echo $this->baseUrl("img/ico_money.png");?>" title="Pagamento"/></a>
+                <a href="<?php echo $this->url(array('controller' => 'Aluno', 'action' => 'index','idaluno' => $al["idaluno"]), null, true);?>" class="detalhes" rel="<?php echo $al["idaluno"]; ?>"><img src="<?php echo $this->baseUrl("img/ico_details.png");?>" title="Detalhes Aluno"/></a>
+				<?php if($al["devedor"] == 1): ?> 
+				<a href="<?php echo $this->url(array('controller' => 'Aluno', 'action' => 'devedor', 
+                    'params' => $al["devedor"],'id' => $al["idaluno"] ), NULL, true); ?>" title="Editar Aluno">
+						PG
+				</a> 
+				<?php else: ?>
+				<a href="<?php echo $this->url(array('controller' => 'Aluno', 'action' => 'devedor', 
+                    'params' => $al["devedor"],'id' => $al["idaluno"] ), NULL, true); ?>" title="Editar Aluno">
+						DV
+				</a> 
+				<?php endif; ?>
+            </td>
+        </tr>
+    <?php endforeach; ?>
+</table>
+<?php endif; ?>

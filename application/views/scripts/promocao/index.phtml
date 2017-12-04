@@ -1,0 +1,53 @@
+<script type="text/javascript">
+$(function(){
+   
+    var abas = $("#telacadastrar").tabs();
+    
+    
+});
+</script>
+<h3 class="header">
+    Promoções
+</h3>
+<a href="<?php echo $this->url(array('controller' => 'Promocao', 'action' => 'novo'), NULL, true); ?>" class="btn">Cadastrar Promoção</a>
+ <div id="validate"></div>
+<p id="resposta">
+<?php echo $this->resp; ?>
+</p>
+<p>
+    * Mesmo com o status "Em Andamento" se a data fim ja estiver passado, a promoção não sera valida.
+    <br />
+    * As promoções que não possuem data fim, deveão ser finalizadas manualmente.
+</p>
+<?php if(count($this->dados) > 0): ?>
+<table class="dtgrid">
+    <tr>
+        <th>Código</th>
+        <th>Desconto</th>
+        <th>Inicio</th>
+        <th>Fim</th>
+        <th>Status</th>
+        <th>Obs</th>
+        <th>AÇÃO</th>
+    </tr>
+    <?php foreach($this->dados as $p): ?>
+    <tr>
+        <td><?php echo $p["codigo"]; ?></td>
+        <td><?php echo $p["valordesconto"]; ?></td>
+        <td><?php echo $this->util->converterDataSaida($p["datainicio"]); ?></td>
+        <td><?php echo $this->util->converterDataSaida($p["datafim"]); ?></td>
+        <td><?php echo ($p["status"] == 1)?"Em Andamento":"Finalizado"; ?></td>
+        <td><?php echo $p["obs"]; ?></td>
+        <td>
+            <?php if($this->util->validarPermissao($this->perfil, "Promocao", "status")): ?>
+            <a href="<?php echo $this->url(array('controller' => 'Promocao', 'action' => 'status', 'params' => $p["idpromocao"])
+                    , NULL, TRUE) ;?>">
+            Ativar / Finalizar
+            </a>
+            <?php endif; ?>
+            
+        </td>
+    </tr>
+    <?php endforeach; ?>
+</table>
+<?php endif; ?>

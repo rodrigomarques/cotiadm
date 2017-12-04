@@ -1,0 +1,79 @@
+<script type="text/javascript">
+$(function(){
+    $(".paineldetalhes").hide();
+    
+    $("#cpf").mask("999.999.999-99");
+
+});
+</script>
+﻿<?php $this->setEscape('htmlentities');
+$util = new Util_Utilitarios();?>
+<h3 class="header">
+    Alunos 
+  
+</h3>
+<div class="telaexcluir" title="EXCLUIR ARQUIVO"></div>
+
+<?php if($this->util->validarPermissao($this->perfil, "Curriculo", "cadastrar")): ?>
+<a href="<?php echo $this->url(array('controller' => 'Curriculo', 'action' => 'cadastrar'), NULL, true); ?>" class="btn">
+    Cadastrar Currículo</a>
+<?php endif; ?>
+
+<form method="get" action="<?php echo $this->url(array('controller' => 'Curriculo', 'action' => 'index')); ?>">
+    Nome do Aluno: <input type="text" name="nome" id="nome" value="<?php echo $this->nome; ?>" />
+    Alocado: 
+    <select name="alocado">
+        <option value=""></option>
+        <option value="0">NÃO</option>
+        <option value="1">SIM</option>
+    </select>
+    Curso:
+    <?php if(count($this->listaCurso) > 0): ?>
+    <select name="curso" id="curso">
+        <option value=""></option>
+        <?php foreach($this->listaCurso as $curso): ?>
+        <option value="<?php echo $curso["idcurso"]; ?>" <?php echo ($this->curso == $curso["idcurso"])?"selected='selected'":""; ?>>
+            <?php echo $curso["curso"]; ?>
+        </option>
+        <?php endforeach; ?>
+    </select>
+    <?php endif; ?>
+    Email: <input type="text" name="email" id="email" value="<?php echo $this->email; ?>" />
+    <input type="submit" value="Buscar Alunos" class="btn" />
+</form>
+<p id="resposta">
+<?php echo $this->resp; ?>
+</p>
+<?php if(count($this->dados) > 0): ?>
+<table class="dtgrid">
+    <tr>
+        <th>Nome</a></th>
+        <th>E-mail</th>
+        <th>Cpf</th>
+        <th>Telefone</th>
+        <th>Celular</th>
+        <th>Alocado</th>
+        <th>AÇÃO</th>
+    </tr>
+    <?php foreach($this->dados as $al): ?>
+        <tr>
+            <td><?php echo $al["nome"]; ?></td>
+            <td><?php echo $al["email"]; ?></td>
+            <td><?php echo $al["cpf"]; ?></td>
+            <td><?php echo $al["telefone"]; ?></td>
+            <td><?php echo $al["celular"]; ?></td>
+            <td><?php echo ($al["alocado"] == 0)?"NÃO":"SIM"; ?></td>
+            <td width="110px"> 
+                <a href="<?php echo $this->baseUrl("bancocurriculo/" . $al["curriculo"]); ?>">Download</a>
+                <?php if($al["alocado"] == 0): ?>
+                    <a href="<?php echo $this->url(array('controller' => 'Curriculo', 'action' => 'empregar', 
+                        'id' => $al["idcurriculo"])); ?>">Empregar</a>
+                <?php else: ?>
+                    <a href="<?php echo $this->url(array('controller' => 'Curriculo', 'action' => 'empregar', 
+                        'id' => $al["idcurriculo"])); ?>">Desempregar</a>
+                <?php endif; ?>
+            </td>
+        </tr>
+    <?php endforeach; ?>
+</table>
+<?php endif; ?>

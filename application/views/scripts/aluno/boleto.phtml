@@ -1,0 +1,48 @@
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="<?php echo $this->baseUrl("js/jquery-1.8.0.min.js"); ?>"></script>
+<script type="text/javascript" src="<?php echo $this->baseUrl("js/jquery-ui-1.8.min.js"); ?>"></script>
+<script type="text/javascript" src="<?php echo $this->baseUrl("js/jquery-ui-pt.br.js"); ?>"></script>
+<script type="text/javascript" src="<?php echo $this->baseUrl("js/jquery.validate.js"); ?>"></script>
+<script type="text/javascript" src="<?php echo $this->baseUrl("js/additional-methods.js"); ?>"></script>
+<script type="text/javascript" src="<?php echo $this->baseUrl("js/jquery.printElement.js"); ?>"></script>
+<link rel="stylesheet" type="text/css" href="<?php echo $this->baseUrl("estilo/redmond/jquery-ui.css"); ?>" />
+<link rel="stylesheet" href="<?php echo $this->baseUrl('estilo/estiloadm.css'); ?>" />
+<script type="text/javascript">
+$(function(){
+   
+    $("#imprimir").button();
+    $("#imprimir").click(function(){
+        $("#contrato").printElement({pageTitle:'',printMode:'popup'});
+    });
+    
+    $("#regras").button();
+    $("#regras").click(function(){
+        $("#refazer").printElement({pageTitle:''});
+    });
+    
+    $(".campovalor").live('keypress', function(event){
+        if(event.which  == 13){
+            $(".valorcontrato").text( $(this).val() );
+            $(this).css('display', 'none');
+        }
+    });
+    
+    $(".valorcontrato").live('click', function(){
+        $(".campovalor").css('display', 'block');
+    });
+    
+    $(".campodados").live('keypress', function(event){
+        if(event.which  == 13){
+            $(".dadoscontrato").text( $(this).val() );
+            $(this).css('display', 'none');
+        }
+    });
+    
+    $(".dadoscontrato").live('click', function(){
+        $(".campodados").css('display', 'block');
+    });
+});
+</script>
+<input type="button" value="Imprimir Contrato" id="imprimir" />
+<input type="button" value="Imprimir Regras" id="regras" />
+<br /><br />

@@ -1,0 +1,313 @@
+<?php
+$util = new Util_Utilitarios();
+?>
+<script type="text/javascript">
+$(function(){
+   
+    var abas = $("#telacadastrar").tabs();
+    $("#turmas").live('change', function(){
+        
+        var valor = $(this).val();
+        if(valor != "" && valor != 0){
+            $.post('<?php echo $this->url(array('controller' => 'Aluno', 'action' => 'conferir')); ?>',
+                    { 
+                        id : valor
+                    },
+                    function(result){
+                        if(result != "")
+                            {
+                                alert(result);
+                            }
+                    });
+           }
+    });
+    $("#curso").live('change', function(){
+        $("#labelturma").text("Turma: ");
+        var valor = $(this).val();
+        if(valor != "")
+        {
+            $.post('<?php echo $this->url(array('controller' => 'Aluno', 'action' => 'listarcursos')); ?>',
+                    { 
+                        id : valor 
+                    },
+                    function(result){
+                        $("#divturma").html(result);
+                    });
+        }
+        else
+        {
+            $("#labelturma").text("");
+            $("#divturma").html("");
+        }
+    });
+    
+    var validator = $('#form1').validate({
+          rules:{
+                nome:{
+                    required: true,
+                    minlength: 3
+                },
+                email : {
+                    required : true,
+                    email: true
+                },
+                dtnascimento : {
+                    required : true
+                },
+                cpf : {
+                    required : true
+                },
+                celular : {
+                    required : true
+                },
+                logradouro : {
+                    required : true
+                },
+                numero : {
+                    required : true,
+                    maxlength : 10
+                },
+                cep : {
+                    required : true
+                },
+                bairro : {
+                    required : true
+                },
+                cidade : {
+                    required : true
+                },
+                valortotal : {
+                    number : true
+                },
+                curso : {
+                    required : true
+                }
+          },
+          messages:{
+                nome:{
+                    required: "Preencha o campo nome<br />",
+                    minlength: 3
+                },
+                email : {
+                    required : "Preencha o campo e-mail<br />",
+                    email: "Informe um e-mail<br />"
+                },
+                dtnascimento : {
+                    required : "Preencha o campo data nascimento<br />"
+                },
+                cpf : {
+                    required : "Preencha o campo cpf<br />"
+                },
+                celular : {
+                    required : "Preencha o campo celular<br />"
+                },
+                logradouro : {
+                    required : "Preencha o campo logradouro<br />"
+                },
+                numero : {
+                    required : "Preencha o campo número<br />",
+                    maxlength : "Informe máximo de 10 caracteres no numero<br />"
+                },
+                cep : {
+                    required : "Preencha o campo cep<br />"
+                },
+                bairro : {
+                    required : "Preencha o campo bairro<br />"
+                },
+                cidade : {
+                    required : "Preencha o campo cidade<br />"
+                },
+                valortotal : {
+                    number : "Informe números validos no valor total<br />"
+                },
+                curso : {
+                    required : "O Campo curso e obrigatorio<br />"
+                }
+                
+          },
+          errorLabelContainer : "#validate"
+     });
+     
+     $(".btn").button();
+     $("#dtnascimento").mask("99/99/9999");
+     $("#cpf").mask("999.999.999-99");
+     $("#telefone").mask("(99) 9999-9999");
+     $("#celular").mask("(99) 9999-9999?9");
+     $("#cep").mask("99.999-999");
+});
+</script>
+<h3 class="header">
+    Cadastrar Aluno
+</h3>
+
+<div id="validate"></div>
+<p id="resposta">
+    <?php echo $this->resp; ?>
+</p>
+    <div id="telacadastrar" title="Cadastrar Aluno">
+        <div id="telacadastro">
+            <ul>
+                <li><a href="#telaaluno">Aluno</a></li>
+            </ul>
+          
+            <div id="telaaluno">
+                <?php if(isset($this->opt) && $this->opt == 1 && isset($this->idaluno)): ?>
+                <a href="<?php echo $this->url(array('controller' => 'Aluno', 'action' => 'turmas', 
+                    'params' => $this->idaluno), NULL, true); ?>" class="btn">Gerar Contrato</a>
+                <?php endif; ?>
+                <?php 
+                /*
+                if($this->pagamento != "A VISTA" && isset($this->opt) && $this->opt == 1 && isset($this->idaluno) && isset($this->idturma)): ?>
+                <a href="<?php echo $this->url(array('controller' => 'Aluno', 'action' => 'pagamento', 
+                    'param1' => $this->idaluno, 'param2' => $this->idturma), NULL, true); ?>" class="btn">Gerar Pagamento</a>
+                <?php endif; */?>
+                <form method="post" id="form1" action="<?php echo $this->url(array('controller' => 'Aluno', 
+                    'action' => 'cadastrar')); ?>">
+                <table width="100%">
+                    <tr>
+                        <td>Nome do Aluno:</td> 
+                        <td colspan="5"><input type="text" style="width: 500px" name="nome" id="nome" value="<?php echo $this->nome; ?>" />
+                            <input type="checkbox" name="alunoantigo" value="1" id="alunoantigo" />Aluno Antigo
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Email:</td> 
+                        <td><input type="text" name="email" id="email" value="<?php echo $this->email; ?>" /></td>
+                        <td>Sexo:</td> 
+                        <td>
+                            <input type="radio" name="sexo" value="M" checked="checked" />M 
+                            <input type="radio" name="sexo" value="F" />F
+                        </td>
+                        <td valign="top">Responsavel Aluno: </td>
+                        <td><input type="text" name="respaluno" id="respaluno" value="<?php echo $this->respaluno; ?>" /></td>
+                    </tr>
+                    <tr>
+                        <td>Nascimento: </td>
+                        <td>
+                            <input type="text" name="dtnascimento" id="dtnascimento" 
+                                   value="<?php echo $this->nasc; ?>" />
+                        </td>
+                        <td valign="top">Cpf: </td>
+                        <td><input type="text" name="cpf" id="cpf" value="<?php echo $this->cpf; ?>" /></td>
+                   
+                        <td valign="top">Rg: </td>
+                        <td><input type="text" name="rg" id="rg" value="<?php echo $this->rg; ?>" /></td>
+                        
+                    </tr>
+                    <tr>
+                        <td valign="top">Telefone: </td>
+                        <td><input type="text" name="telefone" id="telefone" value="<?php echo $this->telefone; ?>" /></td>
+                        <td valign="top">Celular: </td>
+                        <td><input type="text" name="celular" id="celular" value="<?php echo $this->celular; ?>" /></td>
+                    </tr>
+                    <tr>
+                        <td valign="top">Observação Aluno: </td>
+                        <td colspan="5">
+                            <textarea name="obsaluno" id="obsaluno" style="width:400px;height: 100px; "><?php echo $this->obsaluno; ?></textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="6">
+                            <h3>Endereço</h3>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Logradouro: </td>
+                        <td>
+                            <input type="text" name="logradouro" id="logradouro" 
+                                   value="<?php echo $this->logradouro; ?>" />
+                        </td>
+                        <td valign="top">Número: </td>
+                        <td><input type="text" name="numero" id="numero" value="<?php echo $this->numero; ?>" /></td>
+                        <td>Complemento: </td>
+                        <td>
+                            <input type="text" name="complemento" id="complemento" 
+                                   value="<?php echo $this->complemento; ?>" />
+                        </td>
+                    </tr>
+                   <tr>
+                        <td valign="top">Cep: </td>
+                        <td><input type="text" name="cep" id="cep" value="<?php echo $this->cep; ?>" /></td>
+                        <td>Bairro: </td>
+                        <td>
+                            <input type="text" name="bairro" id="bairro" 
+                                   value="<?php echo $this->bairro; ?>" />
+                        </td>
+                        <td valign="top">Cidade: </td>
+                        <td><input type="text" name="cidade" id="cidade" value="<?php echo $this->cidade; ?>" /></td>
+                    </tr>
+                    <tr>
+                        <td>Estado: </td>
+                        <td>
+                            <select name="estado" id="estado">
+                                <?php foreach($this->estados as $est): ?>
+                                <option value="<?php echo $est; ?>"><?php echo $est; ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="6">
+                            <h3>Turma</h3>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Curso: </td>
+                        <td>
+                            <?php if(count($this->listaCurso) > 0): ?>
+                            <select name="curso" id="curso">
+                                <option value=""></option>
+                                <?php foreach($this->listaCurso as $curso): ?>
+                                <option value="<?php echo $curso["idcurso"]; ?>"><?php echo $curso["curso"];  ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                            <?php endif; ?>
+                        </td>
+                        <td>
+                            <div id="labelturma">
+                            </div>
+                        </td>
+                        <td colspan="3">
+                            <div id="divturma">
+                            </div>
+                        </td>
+                        </tr>
+                    <tr>
+                        <td>Forma de Pagamento: </td>
+                        <td>
+                            <?php if(count($this->formaPagamento) > 0): ?>
+                            <select name="pagamento" id="pagamento">
+                                <option value=""></option>
+                                <?php foreach($this->formaPagamento as $pagamento): ?>
+                                <option value="<?php echo $pagamento; ?>"><?php echo $pagamento; ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                            <?php endif; ?>
+                        </td>
+                    
+                        <td valign="top">Responsável: </td>
+                        <td><input type="text" name="responsavel" id="responsavel" value="<?php echo $this->responsavel; ?>" /></td>
+                        <td valign="top">Total do Curso: </td>
+                        <td><input type="text" name="valortotal" id="valortotal" value="<?php echo $this->valortotal; ?>" /></td>
+                    </tr>
+                    <tr>
+                        <td valign="top">Observação: </td>
+                        <td colspan="3">
+                            <textarea name="obs" id="obs" style="width:400px;height: 200px; "><?php echo $this->obs; ?></textarea>
+                        </td>
+                        <td valign="top">
+                            <input type="checkbox" name="alunoreserva" value="1" id="alunoreserva" />Reserva <br /><br />
+                            <input type="checkbox" name="pendente" value="1" id="pendente" />Pendente
+                        </td>
+                    </tr>
+                </table>
+                    
+                    
+          <input type="submit" value="Cadastrar" id="btncadastrar" />
+    </form>
+            </div>
+            
+        </div>
+
+    </div>
+         

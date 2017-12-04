@@ -1,0 +1,27 @@
+[19-Aug-2014 16:51:25 UTC] PHP Parse error:  syntax error, unexpected end of file, expecting '(' in /home/cotiinfo/public_html/admbeta/application/controllers/AlunoController.php on line 41
+[19-Aug-2014 16:51:28 UTC] PHP Parse error:  syntax error, unexpected end of file in /home/cotiinfo/public_html/admbeta/application/controllers/AlunoController.php on line 1831
+[10-Jun-2015 20:27:48 America/Sao_Paulo] PHP Warning:  in_array() expects parameter 2 to be array, integer given in /home/cotiinfo/public_html/admbeta/application/controllers/ChamadaController.php on line 90
+[10-Jun-2015 20:27:48 America/Sao_Paulo] PHP Warning:  in_array() expects parameter 2 to be array, integer given in /home/cotiinfo/public_html/admbeta/application/controllers/ChamadaController.php on line 90
+[10-Jun-2015 20:27:48 America/Sao_Paulo] PHP Warning:  in_array() expects parameter 2 to be array, integer given in /home/cotiinfo/public_html/admbeta/application/controllers/ChamadaController.php on line 90
+[01-Oct-2015 16:31:21 America/Sao_Paulo] PHP Fatal error:  Uncaught exception 'Zend_Acl_Exception' with message 'Resource 'Reserva' not found' in /home/cotiinfo/public_html/library/Zend/Acl.php:365
+Stack trace:
+#0 /home/cotiinfo/public_html/library/Zend/Acl.php(846): Zend_Acl->get('Reserva')
+#1 /home/cotiinfo/public_html/admbeta/library/Util/Utilitarios.php(101): Zend_Acl->isAllowed('adm', 'Reserva', 'index')
+#2 /home/cotiinfo/public_html/admbeta/application/layouts/scripts/layout.phtml(88): Util_Utilitarios->validarPermissao('adm', 'Reserva', 'index')
+#3 /home/cotiinfo/public_html/library/Zend/View.php(108): include('/home/cotiinfo/...')
+#4 /home/cotiinfo/public_html/library/Zend/View/Abstract.php(888): Zend_View->_run('/home/cotiinfo/...')
+#5 /home/cotiinfo/public_html/library/Zend/Layout.php(796): Zend_View_Abstract->render('layout.phtml')
+#6 /home/cotiinfo/public_html/library/Zend/Layout/Controller/Plugin/Layout.php(143): Zend_Layout->render()
+#7 /home/cotiinfo/public_html/library/Zend/Controller/Plugin/Broker.php(333): Zend_Layout_Controller_Plugin_Layout->postD in /home/cotiinfo/public_html/library/Zend/Controller/Plugin/Broker.php on line 336
+[01-Oct-2015 16:31:27 America/Sao_Paulo] PHP Fatal error:  Uncaught exception 'Zend_Acl_Exception' with message 'Resource 'Reserva' not found' in /home/cotiinfo/public_html/library/Zend/Acl.php:365
+Stack trace:
+#0 /home/cotiinfo/public_html/library/Zend/Acl.php(846): Zend_Acl->get('Reserva')
+#1 /home/cotiinfo/public_html/admbeta/library/Util/Utilitarios.php(101): Zend_Acl->isAllowed('adm', 'Reserva', 'index')
+#2 /home/cotiinfo/public_html/admbeta/application/layouts/scripts/layout.phtml(88): Util_Utilitarios->validarPermissao('adm', 'Reserva', 'index')
+#3 /home/cotiinfo/public_html/library/Zend/View.php(108): include('/home/cotiinfo/...')
+#4 /home/cotiinfo/public_html/library/Zend/View/Abstract.php(888): Zend_View->_run('/home/cotiinfo/...')
+#5 /home/cotiinfo/public_html/library/Zend/Layout.php(796): Zend_View_Abstract->render('layout.phtml')
+#6 /home/cotiinfo/public_html/library/Zend/Layout/Controller/Plugin/Layout.php(143): Zend_Layout->render()
+#7 /home/cotiinfo/public_html/library/Zend/Controller/Plugin/Broker.php(333): Zend_Layout_Controller_Plugin_Layout->postD in /home/cotiinfo/public_html/library/Zend/Controller/Plugin/Broker.php on line 336
+[01-Oct-2015 16:31:33 America/Sao_Paulo] PHP Fatal error:  Class 'Application_Model_AdminAcl' not found in /home/cotiinfo/public_html/admbeta/application/Bootstrap.php on line 35
+[04-Feb-2016 13:43:09 America/Sao_Paulo] PHP Parse error:  syntax error, unexpected end of file in /home/cotiinfo/public_html/admbeta/application/controllers/AlunoController.php on line 1730

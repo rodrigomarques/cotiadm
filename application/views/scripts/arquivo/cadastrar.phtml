@@ -1,0 +1,57 @@
+<script type="text/javascript">
+$(function(){
+   
+    var abas = $("#telacadastrar").tabs();
+    
+});
+</script>
+<h3 class="header">
+    Cadastrar Arquivo
+</h3>
+
+<div id="validate"></div><br />
+    <div id="telacadastrar" title="Cadastrar Arquivos">
+        <div id="telacadastro">
+            <ul>
+                <li><a href="#telacurso">Arquivo</a></li>
+            </ul>
+          
+            <div id="telacurso">
+                <form method="post" id="form1" enctype="multipart/form-data">
+                <table width="100%">
+                    <tr>
+                        <td>Título:</td> 
+                        <td><input type="text" name="titulo" id="titulo" value="<?php echo $this->titulo; ?>" /></td>
+                    </tr>
+                    <tr>
+                        <td>Arquivo:</td> 
+                        <td><input type="file" name="arquivo" id="arquivo" value="<?php echo $this->arquivo; ?>" /></td>
+                    </tr>
+                    <tr>
+                        <td>Curso:</td> 
+                        <td>
+                            <?php if(count($this->listaCurso) > 0): ?>
+                            <select name="curso" id="curso">
+                                <option value=""></option>
+                                <?php foreach($this->listaCurso as $c): ?>
+                                <option value="<?php echo $c["idcurso"]; ?>">
+                                    <?php echo $c["curso"]; ?>
+                                </option>
+                                <?php endforeach; ?>
+                            </select>
+                            <?php endif; ?>
+                        </td>
+                </table>
+          <input type="submit" value="Cadastrar" id="btncadastrar" />
+    </form>
+            </div>
+            
+        </div>
+
+    </div>
+         
+
+<p id="resposta">
+    <?php echo $this->resp; ?>
+</p>
+<div id="validate"></div>

@@ -1,0 +1,78 @@
+<script type="text/javascript">
+$(function(){
+   
+    var abas = $("#telacadastrar").tabs();
+    
+    var validator = $('#form1').validate({
+          rules:{
+                area:{
+                    required: true,
+                    minlength: 3
+                }
+          },
+          messages:{
+                area:{
+                    required: "O campo área é obrigatorio.<br />",
+                    minlength: "O campo área deve conter no mínimo 3 caracteres.<br />"
+                }
+          },
+          errorLabelContainer : "#validate"
+     });
+
+    
+});
+</script>
+<h3 class="header">
+    Área dos Cursos
+</h3>
+
+<div id="telacadastrar" title="Cadastrar Area">
+    <div id="telacadastro">
+        <ul>
+            <li><a href="#telaarea">Inserir Area</a></li>
+        </ul>
+
+        <div id="telaarea">
+
+            <form method="post" action="<?php echo $this->url(
+                    array('controller' => 'Area', 'action' => 'Index'), NULL, true); ?>" id="form1">
+                <table width="100%">
+                    <tr>
+                        <td>Nome da Área:</td> 
+                        <td><input type="text" name="area" id="area" value="<?php echo $this->area; ?>" /></td>
+                    </tr>
+                </table>
+                <?php if(!isset($this->idarea)): ?>
+                    <input type="submit" value="Cadastrar" id="btncadastrar" />
+                <?php else: ?>
+                    <input type="hidden" name="id" value="<?php echo $this->idarea; ?>" />
+                    <input type="submit" value="Editar Dados" id="btncadastrar" />
+                <?php endif; ?>
+            </form>
+        </div>
+    </div>
+    
+</div>
+ <div id="validate"></div>
+<p id="resposta">
+<?php echo $this->resp; ?>
+</p>
+<?php if(count($this->dados) > 0): ?>
+<table class="dtgrid">
+    <tr>
+        <th>ÁREA</th>
+        <th>AÇÃO</th>
+    </tr>
+    <?php foreach($this->dados as $f): ?>
+    <tr>
+        <td><?php echo $f["area"]; ?></td>
+        <td>
+            <a href="<?php echo $this->url(array('controller' => 'Area', 'action' => 'Editar', 'params' => $f["idarea"])
+                    , NULL, TRUE) ;?>">
+            Editar
+            </a>
+        </td>
+    </tr>
+    <?php endforeach; ?>
+</table>
+<?php endif; ?>

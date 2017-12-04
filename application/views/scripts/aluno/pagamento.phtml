@@ -1,0 +1,115 @@
+<?php
+$util = new Util_Utilitarios();
+?>
+<script type="text/javascript">
+$(function(){
+   
+    var abas = $("#telacadastrar").tabs();
+    
+    $(".boleto").live('click', function(){
+        var pagamento = $(this).attr("rel");
+        var caminho = "/admbeta/boleto/boleto.php?pagamento=" + pagamento;
+        window.open(caminho,"BOLETOS","width=500,left=10,top=10,right=30");
+    });
+    
+    var validator = $('#form1').validate({
+          rules:{
+                valortotal:{
+                    required: true,
+                    number: true
+                },
+                parcela : {
+                    required : true,
+                    digits : true
+                }
+          },
+          messages:{
+                valortotal:{
+                    required: "Campo valor total é obrigatório<br />",
+                    number: "Informe apenas números no campo valor total<br />"
+                },
+                parcela : {
+                    required : "Campo número de parcelas é obrigatório<br />",
+                    digits : "Informe apenas números nas parcelas<br />"
+                }
+          },
+          errorLabelContainer : "#validate"
+     });
+     
+     $(".btn").button();
+     $(".cobranca").datepicker();
+     
+});
+</script>
+<h3 class="header">
+    Pagamento Parcelado
+</h3>
+<div id="validate"></div>
+<p id="resposta">
+    <?php echo $this->resp; ?>
+</p>
+<?php if(!isset($this->isBoleto)): ?>
+    <div id="telacadastrar" title="Pagamento Parcelado">
+        <div id="telacadastro">
+            <ul>
+                <li><a href="#telapagamento">Dados do Parcelamento</a></li>
+            </ul>
+          
+            <div id="telapagamento">
+                <form method="post" id="form1" action="<?php echo $this->url(array('controller' => 'Aluno', 
+                    'action' => 'pagamento')); ?>">
+                <table width="100%">
+                    <tr>
+                        <td>Valor total do parcelamento:</td> 
+                        <td><input type="text" name="valortotal" id="valortotal" value="<?php echo $this->total; ?>" /></td>
+                        <td>Parcelas:</td> 
+                        <td>
+                            <input type="text" name="parcela" value="<?php echo $this->parcela; ?>" id="parcela" size="5" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top">Observação: </td>
+                        <td colspan="5">
+                            <textarea name="obs" id="obs" style="width:400px;height: 200px; "><?php echo $this->obs; ?></textarea>
+                        </td>
+                    </tr>
+                </table>
+                    
+                    
+          <input type="submit" value="Cadastrar" id="btncadastrar" />
+    </form>
+            </div>
+            
+        </div>
+
+    </div>
+<?php endif; ?>
+<br />
+         
+<?php if(count($this->dadosParcelamento) > 0): ?>
+<table class="dtgrid">
+    <tr>
+        <th>Parcela</th>
+        <th>Valor da Parcela</th>
+        <th>Valor Pago</th>
+        <th>Data Cobrança</th>
+        <th>Status</th>
+        <th></th>
+    </tr>
+    <?php foreach($this->dadosParcelamento as $parcela): ?>
+        <form action="<?php echo $this->url(array('controller' => 'Aluno', 'action' => 'editarpagamento')); ?>" method="get">
+            <input type="hidden" name="idpagamento" value="<?php echo $parcela["pagamento_idpagamento"]; ?>" />
+            <input type="hidden" name="nparcela" value="<?php echo $parcela["nparcela"]; ?>" />
+            <tr>
+                <td><?php echo $parcela["nparcela"]; ?></td>
+                <td>R$ <?php echo $util->formatNumber($parcela["valorparcela"]); ?></td>
+                <td>R$ <?php echo $util->formatNumber($parcela["valorpago"]); ?></td>
+                <td><input type="text" name="cobranca" id="cobranca<?php echo $parcela["nparcela"]; ?>" class="cobranca" value="<?php echo $util->converterDataSaida($parcela["datacobranca"]); ?>" readonly="readonly" /></td>
+                <td><?php echo ($parcela["status"] == 0)?"Não Pago":"Pago"; ?></td>
+                <td><input type="submit" class="btn" value="Alterar" /></td>
+            </tr>
+        </form>
+    <?php endforeach; ?>
+</table>
+<?php endif; ?>
+<br /><br />

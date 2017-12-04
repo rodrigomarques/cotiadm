@@ -1,0 +1,59 @@
+<?php $this->setEscape('htmlentities');
+$util = new Util_Utilitarios();?>
+<h3 class="header">
+    RELATORIOS >> Alunos Novos
+</h3>
+<form action="<?php echo $this->url(array('controller' => 'Relatorio', 'action' => 'alunonovo'),
+        NULL, true); ?>" method="post">
+
+    Mes/Ano Inicio:
+    <select name="mesinicio" id="mesinicio">
+        <?php for($i = 1; $i <= 12; $i++): ?>
+            <option value="<?php echo $i; ?>"><?php echo $i; ?></option>
+        <?php endfor; ?>
+    </select>
+    <select name="anoinicio" id="anoinicio">
+        <?php for($i = date('Y'); $i >= date('Y') - 1; $i--): ?>
+            <option value="<?php echo $i; ?>"><?php echo $i; ?></option>
+        <?php endfor; ?>
+    </select>
+    |
+    Mes/Ano Fim:
+    <select name="mesfim" id="mesfim">
+        <?php for($i = 1; $i <= 12; $i++): ?>
+        <option <?php echo ($i == date('m'))?"selected='selected'":""; ?> value="<?php echo $i; ?>"><?php echo $i; ?></option>
+        <?php endfor; ?>
+    </select>
+    <select name="anofim" id="anofim">
+        <?php for($i = date('Y'); $i >= date('Y') - 1; $i--): ?>
+            <option value="<?php echo $i; ?>"><?php echo $i; ?></option>
+        <?php endfor; ?>
+    </select>
+    
+<input type="submit" value="Buscar" class="btn" />
+</form>
+
+<?php if(count($this->dados) > 0): ?>
+<table class="dtgrid">
+    <tr>
+        <th style="width: 200px">Nome do Aluno</th>
+        <th style="width: 120px">Cadastro</th>
+        <th>Matricula</th>
+        <th>Curso</th>
+        <th>Valor</th>
+        <th>Forma de Pagamento</th>
+        <th>OBS</th>
+    </tr>
+    <?php foreach($this->dados as $al): ?>
+        <tr>
+            <td><?php echo $al["nome"]; ?></td>
+            <td><?php echo ($al["cadastro"]); ?></td>
+            <td><?php echo $al["idaluno"]; ?></td>
+            <td><?php echo $al["curso"]; ?></td>
+            <td><?php echo ($al["valor"]); ?></td>
+            <td><?php echo $al["formapagamento"]; ?></td>
+            <td><?php echo $al["obs"]; ?></td>
+        </tr>
+    <?php endforeach; ?>
+</table>
+<?php endif; ?>

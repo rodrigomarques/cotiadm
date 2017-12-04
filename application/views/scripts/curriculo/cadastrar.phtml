@@ -1,0 +1,75 @@
+<?php
+$util = new Util_Utilitarios();
+?>
+<script type="text/javascript">
+$(function(){
+   
+    var abas = $("#telacadastrar").tabs();
+    $("#btnbuscar").bind('click', function(){
+        
+        $.post('<?php echo $this->url(array('controller' => 'Curriculo', 'action' => 'buscaraluno')); ?>',
+                { 
+                    nome : $("#nome").val()
+                },
+            function(result){
+                $(".resultadobusca").html(result);
+            });
+            
+           return false;
+    });
+    
+    
+     $(".btn").button();
+     
+});
+</script>
+<h3 class="header">
+    Cadastrar Aluno
+</h3>
+
+<div id="validate"></div>
+<p id="resposta">
+    <?php echo $this->resp; ?>
+</p>
+<p>
+    * Ao subir um curriculo para um aluno, caso o mesmo ja possua um currículo cadastrado o mesmo sera excluído do 
+    sistema
+</p>
+    <div id="telacadastrar" title="Cadastrar Currículo">
+        <div id="telacadastro">
+            <ul>
+                <li><a href="#telaaluno">Currículo</a></li>
+            </ul>
+          
+            <div id="telaaluno">
+                
+                <form method="post" id="form1" action="<?php echo $this->url(array('controller' => 'Curriculo', 
+                    'action' => 'cadastrar')); ?>" enctype="multipart/form-data">
+                <table>
+                    <tr>
+                        <td>Aluno:</td> 
+                        <td><input  style="width: 500px" type="text" name="nome" id="nome" value="<?php echo $this->nome; ?>" /></td>
+                        <td>
+                            <input type="submit" value="Buscar" id="btnbuscar" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="3">
+                            <div class="resultadobusca"></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Currículo:</td> 
+                        <td><input  style="width: 500px" type="file" name="arquivo" id="arquivo" /></td>
+                    </tr>
+                </table>
+                    
+                    
+          <input type="submit" value="Cadastrar" id="btncadastrar" />
+    </form>
+            </div>
+            
+        </div>
+
+    </div>
+         
